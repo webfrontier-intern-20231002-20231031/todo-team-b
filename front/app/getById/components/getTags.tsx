@@ -9,10 +9,14 @@ export default async function GetTags() {
     if (!response.ok) throw new Error('Failed to fetch data');
     const users: User[] = await response.json();
     return (
-        <ul>
+        <div>
+            <h1 className="text-lg font-bold">タグ一覧</h1>
+            <ul>
             {users.map((user) => (
                 <li key={user.id}>{user.name}</li>
             ))}
-        </ul>
+            </ul>
+        </div>
+        
     );
 }
