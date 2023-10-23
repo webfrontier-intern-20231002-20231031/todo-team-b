@@ -1,113 +1,148 @@
-import Image from 'next/image'
+"use client";
+import { todo } from 'node:test';
+import React, { useState, useEffect } from 'react';
 
-export default function Home() {
+interface Todo {
+  content: string;
+  deadline: Date;
+  completed: boolean;
+}
+
+function Home() {
+  const [searchText, setSearchText] = useState('');
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [showCompleted, setShowCompleted] = useState(true);
+
+  // サンプルデータ
+  const sampleData: Todo[] = [
+    {
+      content: "ミルクを買う",
+      deadline: new Date("2023-10-20T23:59:59"),
+      completed: true,
+    },
+    {
+      content: "アイスブレイク",
+      deadline: new Date("2023-10-19T23:59:59"),
+      completed: true,
+    },
+    {
+      content: "豆腐を買う",
+      //10/23 12:37nullだとエラーが出るため、アイスブレイクと同様のものを導入
+      deadline: new Date("2023-10-19T23:59:59"),
+      completed: false,
+    },
+  ];
+
+  const handleSearch = () => {
+    // 検索ボタンの処理
+    const filteredTodos = sampleData.filter((todo) =>
+      todo.content.toLowerCase().includes(searchText.toLowerCase())
+    );
+    setTodos(filteredTodos);
+  };
+
+  const handleTodoGETAll = () => {
+    // 全件表示ボタンの処理
+    setTodos(sampleData); // サンプルデータをセット
+  };
+
+  const handleSort = () => {
+    // 検索ボタンの処理
+    const sortedTodos = [...todos].sort((a, b) => {
+      if (!a.deadline) return 1; // 期限がないタスクは最後に
+      if (!b.deadline) return -1; // 期限がないタスクは最後に
+      return a.deadline.getTime() - b.deadline.getTime();
+    });
+    setTodos(sortedTodos);
+  };
+
+  const handleShowCompleated = () => {
+    // 完了状態のタスクだけを表示するハンドラ
+    const completedTodos: Todo[] = todos.filter((todo) => todo.completed);
+    setTodos(completedTodos);
+    setShowCompleted(true);
+  };
+
+  const handleShowIncomplete = () => {
+    // 未完了のタスクだけを表示するハンドラ
+    const incompleteTodos: Todo[] = todos.filter((todo) => !todo.completed);
+    setTodos(incompleteTodos);
+    setShowCompleted(false);
+  };
+  
+  const handleCreate = () => {
+    // 作成ボタンの処理
+    // ...
+  };
+
+  const handleDetail = () => {
+    // 詳細ページに遷移
+  };
+
+  const handleComp = (index: number) => {
+  // タスクの完了状態を切り替える関数
+  const updatedTodos = [...todos];
+  updatedTodos[index].completed = !updatedTodos[index].completed;
+  setTodos(updatedTodos);
+  };
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <main className="flex min-h-screen flex-col items-center p-24">
+      <div className="flex justify-center">
+        <div className="z-10 max-w-5xl w-full items-center font-mono text-sm lg:flex m-8">
+          <h1 className="text-4xl">Todo一覧</h1>
         </div>
       </div>
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+      <div className="flex items-center">
+          <input
+            type="text"
+            placeholder="Todo検索"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            className="p-2 mr-2"
+          />
+          <button onClick={handleSearch} className="bg-blue-500 text-white p-2 rounded-md mr-2">検索</button>
+          <button onClick={handleTodoGETAll} className="bg-blue-500 text-white p-2 rounded-md mr-2">全件表示</button>
+          <button onClick={handleSort} className="bg-blue-500 text-white p-2 rounded-md mr-2">期限/作成日</button>
+          <button onClick={handleShowIncomplete}className="bg-blue-500 text-white p-2 rounded-md mr-2">未完了</button>
+          <button onClick={handleCreate} className="bg-blue-500 text-white p-2 rounded-md mr-2">作成</button>
+        </div>
+      <div className="mt-4">
+        <table className="border-collapse border" cellSpacing="0">
+          <thead>
+            <tr>
+              <th className="p-2 border w-60">内容</th>
+              <th className="p-2 border w-48">期限</th>
+              <th className="p-2 border w-20">状況</th>
+            </tr>
+          </thead>
+          <tbody>
+            {todos.map((todo, index) => (
+              <tr key={index}>
+                <td className="p-2 border ">{todo.content}</td>
+                <td className="p-2 border">
+                  {todo.deadline ? new Date(todo.deadline).toLocaleString() : 'なし'}
+                </td>
+                <td className="p-2 border text-center">{todo.completed ? '完了' : '未完了'}</td>
+                <td className="p-2 border"><button onClick={handleDetail} className="bg-blue-500 text-white p-2 rounded-md mr-2">詳細</button> </td>
+                <td className="p-2 border">
+                  <button
+                    onClick={() => handleComp(index)}
+                    className={`bg-blue-500 text-white p-2 rounded-md mr-2 w-16 ${
+                      todo.completed ? 'bg-red-500' : 'bg-green-600'
+                    }`}
+                  >
+                    {todo.completed ? '未完了' : '完了'}
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </main>
-  )
+  );
 }
+
+export default Home;
