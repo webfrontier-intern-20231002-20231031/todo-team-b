@@ -40,17 +40,17 @@ export default function InputForm() {
             <div>
                 <form onSubmit={controllerSubmit}>
                     {/* input要素がフォームの入力欄を表す */}
-                    <h2>タスク</h2>
+                    <h2>Todo名追加</h2>
                     <input
                     //textと指定することでフォームの入力欄がテキスト入力用であることを指定
                         type="text"
                         //classNameはCSSのクラス名を指定する
-                        className="w-full border-gray-300 px-3 py-2 rounded-md"
+                        className="w-96 border-gray-300 rounded-md"
                         placeholder="タスクを入力してください"
                         value={title}
                         onChange={controllerInputChangeTitle}
                     />
-                    <h2>期限設定</h2>
+                    <h2>期限追加</h2>
                     <input
                     //textと指定することでフォームの入力欄がテキスト入力用であることを指定
                         type="text"
@@ -60,9 +60,9 @@ export default function InputForm() {
                         value={limit}
                         onChange={controllerInputChangeLimit}
                     />
-                    <button className="bg-indigo-600 text-white px-4 py-2 rounded-md" type="submit">作成</button>
                 </form>
             </div>
+                <button className=" whitespace-pre-line bg-indigo-600 text-white px-4 py-2 rounded-md" type="submit">作成</button>
         </div>
     );
 }
