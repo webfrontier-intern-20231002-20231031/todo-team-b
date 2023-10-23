@@ -25,6 +25,6 @@ export default function AboutLayout({
   children: React.ReactNode,
 }) {
   return (
-    <div className="justify-center items-center h-screen">{children}</div>
+    <div className="justify-center items-center h-screen ">{children}</div>
   );
 }
