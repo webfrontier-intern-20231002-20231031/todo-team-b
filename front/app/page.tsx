@@ -27,7 +27,8 @@ function Home() {
     },
     {
       content: "豆腐を買う",
-      deadline: null,
+      //10/23 12:37nullだとエラーが出るため、アイスブレイクと同様のものを導入
+      deadline: new Date("2023-10-19T23:59:59"),
       completed: false,
     },
   ];
