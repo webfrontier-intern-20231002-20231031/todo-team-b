@@ -1,0 +1,245 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "practical-fastapi",
+    "dateExported": "2023-10-17T10:02:36.906Z",
+    "version": "1.1",
+    "folders": [
+        {
+            "_id": "24b2784d-33d0-475e-b076-643bfd602467",
+            "name": "Todo",
+            "containerId": "",
+            "created": "2023-10-16T11:33:16.490Z",
+            "sortNum": 10000
+        },
+        {
+            "_id": "d80c97ec-f4a8-4412-a32d-eed36629c7cd",
+            "name": "Tag",
+            "containerId": "",
+            "created": "2023-10-16T11:33:33.951Z",
+            "sortNum": 20000
+        }
+    ],
+    "requests": [
+        {
+            "_id": "0a4dee23-f296-4f18-8d32-9866c1dc1a62",
+            "colId": "a5728ec1-c30c-4035-af5b-b732f922e552",
+            "containerId": "24b2784d-33d0-475e-b076-643bfd602467",
+            "name": "Todo一覧取得",
+            "url": "http://127.0.0.1:8000/v1/todo",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2023-10-12T07:21:23.370Z",
+            "modified": "2023-10-17T04:19:09.225Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "47f0b9b6-0e66-4a29-a18e-fd6da4f0241f",
+            "colId": "a5728ec1-c30c-4035-af5b-b732f922e552",
+            "containerId": "d80c97ec-f4a8-4412-a32d-eed36629c7cd",
+            "name": "Tag一覧取得",
+            "url": "http://localhost:8000/v1/tag",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2023-10-16T11:32:58.456Z",
+            "modified": "2023-10-17T06:19:50.175Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "98ecd848-6f13-4ad1-8175-6e60d8d0b386",
+            "colId": "a5728ec1-c30c-4035-af5b-b732f922e552",
+            "containerId": "24b2784d-33d0-475e-b076-643bfd602467",
+            "name": "Todo取得",
+            "url": "http://127.0.0.1:8000/v1/todo/{id}",
+            "method": "GET",
+            "sortNum": 15000,
+            "created": "2023-10-17T06:03:03.631Z",
+            "modified": "2023-10-17T09:55:46.355Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "id",
+                    "value": "1",
+                    "isPath": true
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "e56a7839-83bc-49bd-83e4-f568e50a7dde",
+            "colId": "a5728ec1-c30c-4035-af5b-b732f922e552",
+            "containerId": "d80c97ec-f4a8-4412-a32d-eed36629c7cd",
+            "name": "Tag取得",
+            "url": "http://localhost:8000/v1/tag/{id}",
+            "method": "GET",
+            "sortNum": 15000,
+            "created": "2023-10-17T06:19:20.775Z",
+            "modified": "2023-10-17T10:01:05.719Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "id",
+                    "value": "1",
+                    "isPath": true
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "d3fa94c9-2099-4ab7-aacd-f85dd3fe6e89",
+            "colId": "a5728ec1-c30c-4035-af5b-b732f922e552",
+            "containerId": "24b2784d-33d0-475e-b076-643bfd602467",
+            "name": "Todo作成",
+            "url": "http://localhost:8000/v1/todo",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2023-10-12T07:21:23.373Z",
+            "modified": "2023-10-17T05:55:19.338Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"content\": \"ミルクを買う\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "d7f939b3-b6ce-475d-81cc-09f24ce55108",
+            "colId": "a5728ec1-c30c-4035-af5b-b732f922e552",
+            "containerId": "d80c97ec-f4a8-4412-a32d-eed36629c7cd",
+            "name": "Tag作成",
+            "url": "http://localhost:8000/v1/tag",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2023-10-16T11:37:08.165Z",
+            "modified": "2023-10-17T06:20:20.987Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"買い物\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "b391027d-b180-4ba1-be04-ac3ce2c5b375",
+            "colId": "a5728ec1-c30c-4035-af5b-b732f922e552",
+            "containerId": "d80c97ec-f4a8-4412-a32d-eed36629c7cd",
+            "name": "Tag更新",
+            "url": "http://localhost:8000/v1/tag/{id}",
+            "method": "PUT",
+            "sortNum": 30000,
+            "created": "2023-10-16T11:38:52.067Z",
+            "modified": "2023-10-17T10:01:24.778Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "id",
+                    "value": "1",
+                    "isPath": true
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"学校\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "8fa8fd41-ccd5-4a53-a1f9-43c06692675f",
+            "colId": "a5728ec1-c30c-4035-af5b-b732f922e552",
+            "containerId": "24b2784d-33d0-475e-b076-643bfd602467",
+            "name": "Todo更新（完了）",
+            "url": "http://localhost:8000/v1/todo/{id}",
+            "method": "PUT",
+            "sortNum": 40000,
+            "created": "2023-10-12T07:21:23.374Z",
+            "modified": "2023-10-17T09:56:32.782Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "id",
+                    "value": "1",
+                    "isPath": true
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"completed\": true\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "06cf5817-eb24-4b3f-9604-d5dc72f7fba6",
+            "colId": "a5728ec1-c30c-4035-af5b-b732f922e552",
+            "containerId": "d80c97ec-f4a8-4412-a32d-eed36629c7cd",
+            "name": "Tag削除",
+            "url": "http://localhost:8000/v1/tag/{id}",
+            "method": "DELETE",
+            "sortNum": 40000,
+            "created": "2023-10-16T11:38:58.536Z",
+            "modified": "2023-10-17T10:01:39.175Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "id",
+                    "value": "1",
+                    "isPath": true
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "cc38e577-057a-4755-9bd3-14fabeaa4e00",
+            "colId": "a5728ec1-c30c-4035-af5b-b732f922e552",
+            "containerId": "24b2784d-33d0-475e-b076-643bfd602467",
+            "name": "Todo更新（期限）",
+            "url": "http://localhost:8000/v1/todo/{id}",
+            "method": "PUT",
+            "sortNum": 45000,
+            "created": "2023-10-16T23:49:01.180Z",
+            "modified": "2023-10-17T09:57:11.732Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "id",
+                    "value": "1",
+                    "isPath": true
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"deadline\": \"2023-10-20 23:59:59\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "d9680858-43ba-4171-9586-05d375214f79",
+            "colId": "a5728ec1-c30c-4035-af5b-b732f922e552",
+            "containerId": "24b2784d-33d0-475e-b076-643bfd602467",
+            "name": "Todo削除",
+            "url": "http://localhost:8000/v1/todo/{id}",
+            "method": "DELETE",
+            "sortNum": 50000,
+            "created": "2023-10-12T07:21:23.375Z",
+            "modified": "2023-10-17T09:57:43.867Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "id",
+                    "value": "1",
+                    "isPath": true
+                }
+            ],
+            "tests": []
+        }
+    ]
+}

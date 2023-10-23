@@ -1,0 +1,34 @@
+[
+    {
+      "target_class": "models.todo:TodoModel",
+      "data": [
+        {
+            "id": "1",
+            "content": "ミルクを買う",
+            "completed": false,
+            "deadline": null
+        }
+      ]
+    },
+    {
+        "target_class": "models.tag:TagModel",
+        "data": [
+          {
+            "id": "1",
+            "name": "買い物"
+          },
+          {
+            "id": "2",
+            "name": "仕事"
+          },
+          {
+            "id": "3",
+            "name": "スキルアップ"
+          },
+          {
+            "id": "4",
+            "name": "遊び"
+          }
+        ]
+    }
+]

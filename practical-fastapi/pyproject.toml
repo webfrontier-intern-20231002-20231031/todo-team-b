@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "fastapi"
+version = "0.1.0"
+description = "FastAPI Sample"
+authors = ["Kazuyuki Someya <kazuyukisomeya@gmail.com>"]
+readme = "README.md"
+packages = [{include = "fastapi"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+python-dotenv = "^0.21.0"
+requests = "^2.28.1"
+fastapi = "^0.85.1"
+sqlalchemy = "^1.4.42"
+uvicorn = {extras = ["standard"], version = "^0.19.0"}
+
+
+[tool.poetry.group.dev.dependencies]
+flake8 = "^5.0.4"
+black = "^22.10.0"
+alembic = "^1.8.1"
+debugpy = "^1.6.3"
+sqlalchemy-seeder = "^0.3.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
