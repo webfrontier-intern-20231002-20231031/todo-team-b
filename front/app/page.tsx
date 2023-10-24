@@ -2,8 +2,9 @@
 import React, { useState, useEffect } from 'react';
 
 interface Todo {
+  id: number;
   content: string;
-  deadline: Date;
+  deadline: Date | null; // deadlineがnullの場合を考慮
   completed: boolean;
 }
 
@@ -12,25 +13,25 @@ function Home() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [showCompleted, setShowCompleted] = useState(true);
 
-
   const fetchData = async () => {
     try {
-      const response = await fetch('/api');
+      const response = await fetch('/api/TodoGETALL');
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const data: Todo[] = await response.json();
-  
+
       // 取得したデータをコンポーネントの状態にセット
       setTodos(data);
     } catch (error) {
       console.error('Error:', error);
     }
-  };
+  }
 
-  fetchData();
-    
-  // 他の関数やデータ
+  // fetchDataをuseEffect内に移動して、コンポーネントがマウントされた時に実行
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const handleSearch = () => {
     const filteredTodos = todos.filter((todo) =>
@@ -40,7 +41,8 @@ function Home() {
   };
 
   const handleTodoGETAll = () => {
-    setTodos(todos); // フィルター解除
+    // フィルター解除時に再度データを取得
+    fetchData();
   };
 
   const handleSort = () => {
@@ -52,7 +54,7 @@ function Home() {
     setTodos(sortedTodos);
   };
 
-  const handleShowCompleated = () => {
+  const handleShowCompleted = () => {
     const completedTodos: Todo[] = todos.filter((todo) => todo.completed);
     setTodos(completedTodos);
     setShowCompleted(true);
@@ -69,8 +71,15 @@ function Home() {
     // ...
   };
 
-  const handleDetail = () => {
-    // 詳細ページに遷移
+  const handleDetail = (id: number) => {
+    // 対応するTodoを検索
+    const selectedTodo = todos.find((todo) => todo.id === id);
+
+    if (selectedTodo) {
+      console.log('Selected Todo:', selectedTodo);
+    } else {
+      console.log('Todo not found');
+    }
   };
 
   const handleComp = (index: number) => {
@@ -129,7 +138,7 @@ function Home() {
                 </td>
                 <td className="p-2 border text-center">{todo.completed ? '完了' : '未完了'}</td>
                 <td className="p-2 border">
-                  <button onClick={handleDetail} className="bg-blue-500 text-white p-2 rounded-md mr-2">
+                  <button onClick={() => handleDetail(todo.id)} className="bg-blue-500 text-white p-2 rounded-md mr-2">
                     詳細
                   </button>{' '}
                 </td>
