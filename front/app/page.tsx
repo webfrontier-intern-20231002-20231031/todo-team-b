@@ -1,10 +1,10 @@
-"use client";
-import { todo } from 'node:test';
+'use client'
 import React, { useState, useEffect } from 'react';
 
 interface Todo {
+  id: number;
   content: string;
-  deadline: Date;
+  deadline: Date | null; // deadlineがnullの場合を考慮
   completed: boolean;
 }
 
@@ -13,77 +13,79 @@ function Home() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [showCompleted, setShowCompleted] = useState(true);
 
-  // サンプルデータ
-  const sampleData: Todo[] = [
-    {
-      content: "ミルクを買う",
-      deadline: new Date("2023-10-20T23:59:59"),
-      completed: true,
-    },
-    {
-      content: "アイスブレイク",
-      deadline: new Date("2023-10-19T23:59:59"),
-      completed: true,
-    },
-    {
-      content: "豆腐を買う",
-      //10/23 12:37nullだとエラーが出るため、アイスブレイクと同様のものを導入
-      deadline: new Date("2023-10-19T23:59:59"),
-      completed: false,
-    },
-  ];
+  const fetchData = async () => {
+    try {
+      const response = await fetch('/api/TodoGETAll');
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data: Todo[] = await response.json();
+
+      // 取得したデータをコンポーネントの状態にセット
+      setTodos(data);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+
+  // fetchDataをuseEffect内に移動して、コンポーネントがマウントされた時に実行
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const handleSearch = () => {
-    // 検索ボタンの処理
-    const filteredTodos = sampleData.filter((todo) =>
+    const filteredTodos = todos.filter((todo) =>
       todo.content.toLowerCase().includes(searchText.toLowerCase())
     );
     setTodos(filteredTodos);
   };
 
   const handleTodoGETAll = () => {
-    // 全件表示ボタンの処理
-    setTodos(sampleData); // サンプルデータをセット
+    // フィルター解除時に再度データを取得
+    fetchData();
   };
 
   const handleSort = () => {
-    // 検索ボタンの処理
     const sortedTodos = [...todos].sort((a, b) => {
-      if (!a.deadline) return 1; // 期限がないタスクは最後に
-      if (!b.deadline) return -1; // 期限がないタスクは最後に
+      if (!a.deadline) return 1;
+      if (!b.deadline) return -1;
       return a.deadline.getTime() - b.deadline.getTime();
     });
     setTodos(sortedTodos);
   };
 
-  const handleShowCompleated = () => {
-    // 完了状態のタスクだけを表示するハンドラ
+  const handleShowCompleted = () => {
     const completedTodos: Todo[] = todos.filter((todo) => todo.completed);
     setTodos(completedTodos);
     setShowCompleted(true);
   };
 
   const handleShowIncomplete = () => {
-    // 未完了のタスクだけを表示するハンドラ
     const incompleteTodos: Todo[] = todos.filter((todo) => !todo.completed);
     setTodos(incompleteTodos);
     setShowCompleted(false);
   };
-  
+
   const handleCreate = () => {
     // 作成ボタンの処理
     // ...
   };
 
-  const handleDetail = () => {
-    // 詳細ページに遷移
+  const handleDetail = (id: number) => {
+    // 対応するTodoを検索
+    const selectedTodo = todos.find((todo) => todo.id === id);
+
+    if (selectedTodo) {
+      console.log('Selected Todo:', selectedTodo);
+    } else {
+      console.log('Todo not found');
+    }
   };
 
   const handleComp = (index: number) => {
-  // タスクの完了状態を切り替える関数
-  const updatedTodos = [...todos];
-  updatedTodos[index].completed = !updatedTodos[index].completed;
-  setTodos(updatedTodos);
+    const updatedTodos = [...todos];
+    updatedTodos[index].completed = !updatedTodos[index].completed;
+    setTodos(updatedTodos);
   };
 
   return (
@@ -95,19 +97,29 @@ function Home() {
       </div>
 
       <div className="flex items-center">
-          <input
-            type="text"
-            placeholder="Todo検索"
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-            className="p-2 mr-2"
-          />
-          <button onClick={handleSearch} className="bg-blue-500 text-white p-2 rounded-md mr-2">検索</button>
-          <button onClick={handleTodoGETAll} className="bg-blue-500 text-white p-2 rounded-md mr-2">全件表示</button>
-          <button onClick={handleSort} className="bg-blue-500 text-white p-2 rounded-md mr-2">期限/作成日</button>
-          <button onClick={handleShowIncomplete}className="bg-blue-500 text-white p-2 rounded-md mr-2">未完了</button>
-          <button onClick={handleCreate} className="bg-blue-500 text-white p-2 rounded-md mr-2">作成</button>
-        </div>
+        <input
+          type="text"
+          placeholder="Todo検索"
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+          className="p-2 mr-2"
+        />
+        <button onClick={handleSearch} className="bg-blue-500 text-white p-2 rounded-md mr-2">
+          検索
+        </button>
+        <button onClick={handleTodoGETAll} className="bg-blue-500 text-white p-2 rounded-md mr-2">
+          全件表示
+        </button>
+        <button onClick={handleSort} className="bg-blue-500 text-white p-2 rounded-md mr-2">
+          期限/作成日
+        </button>
+        <button onClick={handleShowIncomplete} className="bg-blue-500 text-white p-2 rounded-md mr-2">
+          未完了
+        </button>
+        <button onClick={handleCreate} className="bg-blue-500 text-white p-2 rounded-md mr-2">
+          作成
+        </button>
+      </div>
       <div className="mt-4">
         <table className="border-collapse border" cellSpacing="0">
           <thead>
@@ -125,7 +137,11 @@ function Home() {
                   {todo.deadline ? new Date(todo.deadline).toLocaleString() : 'なし'}
                 </td>
                 <td className="p-2 border text-center">{todo.completed ? '完了' : '未完了'}</td>
-                <td className="p-2 border"><button onClick={handleDetail} className="bg-blue-500 text-white p-2 rounded-md mr-2">詳細</button> </td>
+                <td className="p-2 border">
+                  <button onClick={() => handleDetail(todo.id)} className="bg-blue-500 text-white p-2 rounded-md mr-2">
+                    詳細
+                  </button>{' '}
+                </td>
                 <td className="p-2 border">
                   <button
                     onClick={() => handleComp(index)}
