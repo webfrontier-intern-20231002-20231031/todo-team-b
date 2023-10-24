@@ -9,4 +9,4 @@ uvicorn[standard]
 debugpy
 alembic
 sqlalchemy-seeder
-psycopg2sudo apt-get install libpq-dev
+psycopg2

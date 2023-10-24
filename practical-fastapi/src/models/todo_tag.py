@@ -1,4 +1,5 @@
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 from sqlalchemy import Integer, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
@@ -7,6 +8,7 @@ from sqlalchemy.types import TIMESTAMP
 
 from app.database import Base
 
+from sqlalchemy.dialects import postgresql
 
 class TodoTagModel(Base):
     __tablename__ = "todo_tag"
@@ -17,13 +19,11 @@ class TodoTagModel(Base):
     tag_id: Mapped[int] = mapped_column(Integer, ForeignKey("tag.id"), primary_key=True)
 
     created_at: Mapped[datetime] = mapped_column(
-        TIMESTAMP(timezone=True),
-        nullable=False,
-        server_default=text("DATETIME('now', 'localtime')"),
+        postgresql.TIMESTAMP(timezone=True),
+        default=lambda: datetime.now(ZoneInfo("Asia/Tokyo")),
     )
 
     updated_at: Mapped[datetime] = mapped_column(
-        TIMESTAMP(timezone=True),
-        nullable=False,
-        server_default=text("DATETIME('now', 'localtime')"),
+        postgresql.TIMESTAMP(timezone=True),
+        onupdate=lambda: datetime.now(ZoneInfo("Asia/Tokyo")),
     )
