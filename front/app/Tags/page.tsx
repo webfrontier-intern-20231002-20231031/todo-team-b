@@ -1,12 +1,12 @@
 "use client";
 
-import Delete from "../todoGetById/components/delete";
-import GetTags from "../todoGetById/components/getTags";
-import Put from "../todoGetById/components/put";
-import PostTag from "./postTag";
+import DELETEButton from "../Compornents/ButtonCompornents/DELETEButton";
+import TagGETAll from "../Compornents/TableCompornents/TagGETAll";
+import PUTButton from "../Compornents/ButtonCompornents/PUTButton";
+import POSTButton from "../Compornents/ButtonCompornents/POSTButton";
 
 
-export default function TagGetAll() {
+export default function Tags() {
 
   return (
     <main className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
@@ -14,18 +14,18 @@ export default function TagGetAll() {
         <div className="">
             <div className="w-full m-5">
                 <div className="max-w-md mx-auto rounded-lg shadow-md overflow-hidden">
-                    <GetTags/>
+                    <TagGETAll/>
                 </div>
                 <div className="text-right">
                 
-                    <PostTag/>
+                    <POSTButton/>
                 </div>
             </div>
         </div>
         <div className="text-center">
             <div>
-                <Delete/>
-                <Put/>
+                <DELETEButton/>
+                <PUTButton/>
             </div>
         </div>
         
