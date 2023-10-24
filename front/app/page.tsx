@@ -15,7 +15,7 @@ function Home() {
 
   const fetchData = async () => {
     try {
-      const response = await fetch('/api/TodoGETALL');
+      const response = await fetch('/api/TodoGETAll');
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
