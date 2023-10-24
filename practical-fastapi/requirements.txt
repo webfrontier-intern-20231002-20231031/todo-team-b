@@ -9,3 +9,4 @@ uvicorn[standard]
 debugpy
 alembic
 sqlalchemy-seeder
+psycopg2

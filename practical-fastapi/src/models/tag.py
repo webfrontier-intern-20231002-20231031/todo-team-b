@@ -1,8 +1,11 @@
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 from sqlalchemy import Integer, String
+from sqlalchemy.dialects import postgresql
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.sql.expression import text
+from sqlalchemy.sql.functions import now
 from sqlalchemy.types import TIMESTAMP
 
 from app.database import Base
@@ -15,19 +18,16 @@ class TagModel(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     name: Mapped[str] = mapped_column(String(32), nullable=False, unique=True)
     todos: Mapped[list["TodoModel"]] = relationship(
-        "TodoModel",
-        secondary=TodoTagModel.__tablename__,
-        back_populates="tags"
+        "TodoModel", secondary=TodoTagModel.__tablename__, back_populates="tags"
     )
 
     created_at: Mapped[datetime] = mapped_column(
-        TIMESTAMP(timezone=True),
-        nullable=False,
-        server_default=text("DATETIME('now', 'localtime')"),
+        postgresql.TIMESTAMP(timezone=True),
+        default=lambda: datetime.now(ZoneInfo("Asia/Tokyo")),
     )
 
     updated_at: Mapped[datetime] = mapped_column(
-        TIMESTAMP(timezone=True),
-        nullable=False,
-        server_default=text("DATETIME('now', 'localtime')"),
+        postgresql.TIMESTAMP(timezone=True),
+        default=lambda: datetime.now(ZoneInfo("Asia/Tokyo")),
+        onupdate=lambda: datetime.now(ZoneInfo("Asia/Tokyo")),
     )

@@ -1,5 +1,8 @@
 ## install dependencies
 
+#### 10/24 SQLiteからpostgresへのマイグレーションを行ったことによる追記
+requirements.txtに`psycopg2`を追記
+
 pip install -r requirements.txt
 
 ## edit enviroment variables
