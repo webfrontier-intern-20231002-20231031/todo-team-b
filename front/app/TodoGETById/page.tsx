@@ -1,10 +1,10 @@
 "use client";
 
-import TodoName from "./components/todoName";
-import Deadline from "./components/deadline";
-import GetTags from "./components/getTags";
-import Delete from "./components/delete";
-import Put from "./components/put";
+import TodoGETName from "../Compornents/TableCompornents/TodoGETName";
+import TagGETAll from "../Compornents/TableCompornents/TagGETAll";
+import DELETEButton from "../Compornents/ButtonCompornents/DELETEButton";
+import PUTButton from "../Compornents/ButtonCompornents/PUTButton";
+import TodoGETDeadline from "../Compornents/TableCompornents/TodoGETDeadline";
 
 
 export default function TodoGetById() {
@@ -15,18 +15,18 @@ export default function TodoGetById() {
         <div className="flex justify-between">
             <div className="w-full m-5">
                 <div className="max-w-md mx-auto rounded-lg shadow-md overflow-hidden">
-                <TodoName/>
+                <TodoGETName/>
                 </div>
-                <Deadline/>
+                <TodoGETDeadline/>
             </div>
             <div className="w-full m-5">
-                <GetTags/>
+                <TagGETAll/>
             </div>
         </div>
         <div className="text-center">
             <div>
-                <Delete/>
-                <Put/>
+                <DELETEButton/>
+                <PUTButton/>
             </div>
         </div>
         

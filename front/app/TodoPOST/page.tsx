@@ -1,7 +1,7 @@
 "use client";
 
-import Post from "../formComponent/Post";
-import UserList from "../formComponent/fetchTest";
+import Post from "../Compornents/FormComponents/Post";
+import UserList from "../Compornents/FormComponents/fetchTest";
 
 interface Props {
     width : string
