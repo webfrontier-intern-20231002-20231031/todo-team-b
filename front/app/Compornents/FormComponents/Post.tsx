@@ -1,44 +1,66 @@
 import React, {useState} from "react";
 
+export const config = {
+    api: {
+      bodyParser: false,
+    },
+  };
 interface IPost {
-    task: string;
-    //content: string;
-    deadline: string;
+    content: string;
+    deadline: any;
     compflg: boolean;
 }
 
 export default function InputForm() {
-    const [title, setTitle] = useState<string>("");
-    //const [detail, setDetail] = useState<string>("");
-    const [limit, setLimit] = useState<string>("");
+    //入力フォームの作成
+    const [content, setContent] = useState<string>("");
+    const [deadline, setDeadline] = useState<string>("");
     const [post, setPost] = useState<IPost[]> ([]);
 
-    const controllerInputChangeTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setTitle(e.target.value);
+    const controllerInputChangeContent = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setContent(e.target.value);
     };
 
-    const controllerInputChangeLimit = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setLimit(e.target.value);
+    const controllerInputChangeDeadline = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setDeadline(e.target.value);
     }
+    //Postリクエスト発行の処理
 
-    const controllerSubmit = (e: React.FormEvent) => {
-        e.preventDefault;
+    // type Todo = {
+    //     completed: boolean;
+    //     deadline: Date;
+    //     id: number;
+    //     content: string;
+    //     tags: number[];
+    // }
+
+    // const [todos, settodos] = useState<Todo[] | null>(null);
+
+
+    const onSubmit = async (): Promise<void> => {
         const newPost: IPost = {
-            task: title,
-            //content: detail,
-            deadline: limit,
-            compflg: false
+            content: content,
+            deadline: null,
+            compflg: false,
         };
-
-        setPost(prePost => [...prePost, newPost]);
-        setTitle("");
-        setLimit("");
-    };
+        console.log("Post.tsx")
+        try {
+            const res = await fetch('/api/TodoPOST',{
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(newPost),
+            });
+        } catch (err){
+            alert(err)
+        }
+    }
 
     return (
         <div>
             <div>
-                <form onSubmit={controllerSubmit}>
+                <form>
                     {/* input要素がフォームの入力欄を表す */}
                     <h2>Todo名追加</h2>
                     <input
@@ -47,8 +69,8 @@ export default function InputForm() {
                         //classNameはCSSのクラス名を指定する
                         className="w-96 border-gray-300 rounded-md"
                         placeholder="タスクを入力してください"
-                        value={title}
-                        onChange={controllerInputChangeTitle}
+                        value={content}
+                        onChange={controllerInputChangeContent}
                     />
                     <h2>期限追加</h2>
                     <input
@@ -57,12 +79,12 @@ export default function InputForm() {
                         //classNameはCSSのクラス名を指定する
                         className="w-full border-gray-300 mt-10 px-7 py-8 rounded-md"
                         placeholder="期限を入力してください ex)2023/12/31."
-                        value={limit}
-                        onChange={controllerInputChangeLimit}
+                        value={deadline}
+                        onChange={controllerInputChangeDeadline}
                     />
                 </form>
             </div>
-                <button className=" whitespace-pre-line bg-indigo-600 text-white px-4 py-2 rounded-md" type="submit">作成</button>
+                <button className=" whitespace-pre-line bg-indigo-600 text-white px-4 py-2 rounded-md" type="submit" onClick={onSubmit}>作成</button>
         </div>
     );
 }
