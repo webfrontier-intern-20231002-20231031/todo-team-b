@@ -1,5 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react';
+import { useRouter } from "next/navigation";
 
 interface Todo {
   id: number;
@@ -12,6 +13,7 @@ function Home() {
   const [searchText, setSearchText] = useState('');
   const [todos, setTodos] = useState<Todo[]>([]);
   const [showCompleted, setShowCompleted] = useState(true);
+  const router = useRouter();
 
   const fetchData = async () => {
     try {
@@ -69,6 +71,7 @@ function Home() {
   const handleCreate = () => {
     // 作成ボタンの処理
     // ...
+    router.push("/TodoPOST")
   };
 
   const handleDetail = (id: number) => {
@@ -82,11 +85,38 @@ function Home() {
     }
   };
 
-  const handleComp = (index: number) => {
-    const updatedTodos = [...todos];
-    updatedTodos[index].completed = !updatedTodos[index].completed;
+  const handleComp = (id: number) => {
+    const updatedTodos = todos.map((todo) => {
+      if (todo.id === id) {
+        const updatedTodo = {
+          ...todo,
+          completed: !todo.completed,
+        };
+  
+        fetch(`/api/TodoPUTCompleted`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(updatedTodo),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log('Server response:', data);
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+          });
+  
+        return updatedTodo;
+      }
+      return todo;
+    });
+  
     setTodos(updatedTodos);
   };
+  
+  
 
   return (
     <main className="flex min-h-screen flex-col items-center p-24">
