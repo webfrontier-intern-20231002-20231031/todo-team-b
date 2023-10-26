@@ -1,14 +1,9 @@
 import React, { useState } from "react";
 
-export const config = {
-    api: {
-      bodyParser: false,
-    },
-  };
 interface IPost {
     content: string;
-    deadline: any;
-    compflg: boolean;
+    //deadline: any;
+    //compflg: boolean;
 }
 
 export default function InputForm() {
@@ -28,16 +23,22 @@ export default function InputForm() {
     const controllerSubmit = (e: React.FormEvent) => {
         e.preventDefault;
         const newPost: IPost = {
-            task: title,
-            //content: detail,
-            deadline: limit,
-            compflg: false
+            content: content,
         };
-
-        setPost(prePost => [...prePost, newPost]);
-        setTitle("");
-        setLimit("");
-    };
+        console.log(newPost)
+        try {
+            const res = await fetch('/api/TodoPOST',{
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(newPost),
+            });
+            //console.log(res)
+        } catch (err){
+            alert(err)
+        }
+    }
 
     return (
         <div>
