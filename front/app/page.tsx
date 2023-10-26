@@ -116,7 +116,26 @@ function Home() {
     setTodos(updatedTodos);
   };
   
+  const handleDelete = (id: number) => {
+    const deletedTodo = todos.find((todo) => todo.id === id);
   
+        fetch(`/api/TodoDELETE`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(deletedTodo?.id),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log('Server response:', data);
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+          });
+
+        fetchData();
+    };
 
   return (
     <main className="flex min-h-screen flex-col items-center p-24">
@@ -181,6 +200,11 @@ function Home() {
                   >
                     {todo.completed ? '未完了' : '完了'}
                   </button>
+                </td>
+                <td className="p-2 border">
+                  <button onClick={() => handleDelete(todo.id)} className="bg-red-500 text-white p-2 rounded-md mr-2">
+                    削除
+                  </button>{' '}
                 </td>
               </tr>
             ))}
