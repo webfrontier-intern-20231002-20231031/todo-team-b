@@ -1,14 +1,9 @@
 import React, {useState} from "react";
 
-export const config = {
-    api: {
-      bodyParser: false,
-    },
-  };
 interface IPost {
     content: string;
-    deadline: any;
-    compflg: boolean;
+    //deadline: any;
+    //compflg: boolean;
 }
 
 export default function InputForm() {
@@ -40,10 +35,8 @@ export default function InputForm() {
     const onSubmit = async (): Promise<void> => {
         const newPost: IPost = {
             content: content,
-            deadline: null,
-            compflg: false,
         };
-        console.log("Post.tsx")
+        console.log(newPost)
         try {
             const res = await fetch('/api/TodoPOST',{
                 method: "POST",
@@ -52,6 +45,7 @@ export default function InputForm() {
                 },
                 body: JSON.stringify(newPost),
             });
+            //console.log(res)
         } catch (err){
             alert(err)
         }
