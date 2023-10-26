@@ -1,4 +1,4 @@
-// "use client";
+"use client";
 
 import TodoGETName from "../Compornents/TableCompornents/TodoGETName";
 import TagGETAll from "../Compornents/TableCompornents/TagGETAll";

@@ -5,7 +5,7 @@ export async function GET() {
     // const headers = new Headers();
     // headers.append('Access-Control-Allow-Origin', '*'); // これはテスト用の設定で、実際のプロダクション環境では '*' を使用しないでください
 
-    const response = await fetch('http://127.0.0.1:8000/v1/tag'
+    const response = await fetch('http://localhost:8000/v1/tag'
     // , {
     //     method: 'GET',
     //     headers: headers, // 上で設定したヘッダーを使ってリクエストを送信

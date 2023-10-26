@@ -1,5 +1,5 @@
 type Tag = {
-    id: number,
+    id: string,
     name: string,
     todos: string, //使わず
   };
