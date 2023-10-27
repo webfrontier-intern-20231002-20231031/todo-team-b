@@ -113,18 +113,18 @@ function Home() {
       return todo;
     });
   
-    setTodos(updatedTodos);
+    fetchData();
   };
   
   const handleDelete = (id: number) => {
     const deletedTodo = todos.find((todo) => todo.id === id);
   
         fetch(`/api/TodoDELETE`, {
-          method: 'POST',
+          method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(deletedTodo?.id),
+          body: JSON.stringify(deletedTodo),
         })
           .then((response) => response.json())
           .then((data) => {

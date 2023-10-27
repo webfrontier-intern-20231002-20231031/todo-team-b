@@ -2,10 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export default async function DELETE(req: NextRequest): Promise<NextResponse> {
 
+    console.log(req.body)
     if (req.body !== null) {
       // リクエストボディをJSONとしてパース
-      const requestBody = await req.text();
-      const parsedBody = JSON.parse(requestBody);
+      const parsedBody = await req.json();
+      // const parsedBody = JSON.parse(requestBody);
 
       if (parsedBody && parsedBody.id !== undefined && parsedBody.completed !== undefined) {
         const id = parsedBody.id; // クライアントからタスクIDを受け取る
