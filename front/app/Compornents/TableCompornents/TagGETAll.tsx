@@ -5,9 +5,7 @@ type Tag = {
   };
 
 export default async function TagGETAll() { 
-    const response = await fetch('http://localhost:3000/api/TagGETAll/', {
-        cache: "no-store",
-      });
+    const response = await fetch('http://localhost:3000/api/kari_api/TagGETAll/');
     if (!response.ok) throw new Error('Failed to fetch data');
     const tags: Tag[] = await response.json();
     return (
