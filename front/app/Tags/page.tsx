@@ -1,7 +1,7 @@
 "use client";
 
 import DELETEButton from "../Compornents/ButtonCompornents/DELETEButton";
-import TagGETAll from "../Compornents/TableCompornents/TagGETAll";
+import { TagGETALL } from "../Compornents/TableCompornents/TagGETAll";
 import PUTButton from "../Compornents/ButtonCompornents/PUTButton";
 import POSTButton from "../Compornents/ButtonCompornents/POSTButton";
 
@@ -14,7 +14,7 @@ export default function Tags() {
         <div className="">
             <div className="w-full m-5">
                 <div className="max-w-md mx-auto rounded-lg shadow-md overflow-hidden">
-                    <TagGETAll/>
+                    {/* <TagGETALL/> */}
                 </div>
                 <div className="text-right">
                 
