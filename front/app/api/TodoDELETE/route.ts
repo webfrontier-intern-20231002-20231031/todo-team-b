@@ -25,7 +25,6 @@ export default async function DELETE(req: NextRequest): Promise<NextResponse> {
           const corsHeaders = {
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': 'OPTIONS, DELETE, POST',
-            'Access-Control-Allow-Headers': 'Content-Type',
           };
           return NextResponse.json({ message: 'Task status updated successfully' }, { status: 200, headers: corsHeaders });
         } else {

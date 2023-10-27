@@ -15,12 +15,11 @@ export async function GET() {
   const data = await response.json();
 
   // レスポンスヘッダーにCORS関連の設定を追加
-  // const corsHeaders = {
-  //   'Access-Control-Allow-Origin': '*',
-  //   'Access-Control-Allow-Methods': 'GET, OPTIONS', // 必要に応じて他のHTTPメソッドも設定
-  //   'Access-Control-Allow-Headers': 'Content-Type',
-  // };
+  const corsHeaders = {
+    'Access-Control-Allow-Origin': 'https://3000',
+    'Access-Control-Allow-Methods': 'GET, OPTIONS', // 必要に応じて他のHTTPメソッドも設定
+  };
 
-  // return NextResponse.json(data, { headers: corsHeaders });
-  return NextResponse.json(data);
+  return NextResponse.json(data, { headers: corsHeaders });
+  // return NextResponse.json(data);
 }

@@ -25,5 +25,6 @@ class TodoTagModel(Base):
 
     updated_at: Mapped[datetime] = mapped_column(
         postgresql.TIMESTAMP(timezone=True),
+        default=lambda: datetime.now(ZoneInfo("Asia/Tokyo")),
         onupdate=lambda: datetime.now(ZoneInfo("Asia/Tokyo")),
     )
