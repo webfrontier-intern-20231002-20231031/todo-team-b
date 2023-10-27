@@ -69,8 +69,6 @@ function Home() {
   };
 
   const handleCreate = () => {
-    // 作成ボタンの処理
-    // ...
     router.push("/TodoPOST")
   };
 
@@ -78,11 +76,6 @@ function Home() {
     // 対応するTodoを検索
     const selectedTodo = todos.find((todo) => todo.id === id);
 
-    if (selectedTodo) {
-      console.log('Selected Todo:', selectedTodo);
-    } else {
-      console.log('Todo not found');
-    }
   };
 
   const handleComp = (id: number) => {
@@ -94,7 +87,7 @@ function Home() {
         };
   
         fetch(`/api/TodoPUTCompleted`, {
-          method: 'POST',
+          method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
           },
@@ -118,23 +111,17 @@ function Home() {
   
   const handleDelete = (id: number) => {
     const deletedTodo = todos.find((todo) => todo.id === id);
-  
-        fetch(`/api/TodoDELETE`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(deletedTodo),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            console.log('Server response:', data);
-          })
-          .catch((error) => {
-            console.error('Error:', error);
-          });
 
-        fetchData();
+    if (deletedTodo) {
+        console.log(deletedTodo.id);
+
+        fetch(`/api/TodoDELETE`, {
+            method: 'DELETE',
+        });
+    } else {
+        console.log(`ID ${id}のTodoは見つかりませんでした。`);
+    }
+
     };
 
   return (
