@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 interface IPost {
     content: string;
-    //deadline: any;
+    deadline: any;
     //compflg: boolean;
 }
 
@@ -19,11 +19,24 @@ export default function InputForm() {
     const controllerInputChangeLimit = (e: React.ChangeEvent<HTMLInputElement>) => {
         setLimit(e.target.value);
     }
+    //Postリクエスト発行の処理
 
-    const controllerSubmit = (e: React.FormEvent) => {
-        e.preventDefault;
+    // type Todo = {
+    //     completed: boolean;
+    //     deadline: Date;
+    //     id: number;
+    //     content: string;
+    //     tags: number[];
+    // }
+
+    // const [todos, settodos] = useState<Todo[] | null>(null);
+
+    const time = "T23:59:59"
+
+    const onSubmit = async (): Promise<void> => {
         const newPost: IPost = {
             content: content,
+            deadline: deadline+time,
         };
         console.log(newPost)
         try {
@@ -61,9 +74,9 @@ export default function InputForm() {
                         type="text"
                         //classNameはCSSのクラス名を指定する
                         className="w-full border-gray-300 mt-10 px-7 py-8 rounded-md"
-                        placeholder="期限を入力してください ex)2023/12/31."
-                        value={limit}
-                        onChange={controllerInputChangeLimit}
+                        placeholder="期限を入力してください ex)2023-10-31"
+                        value={deadline}
+                        onChange={controllerInputChangeDeadline}
                     />
                 </form>
             </div>
