@@ -8,9 +8,6 @@ interface TagPost{
 interface Redirect{
     data: string;
 }
-// const POSTButton = () => {
-//     return <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded w-20 m-5">追加</button>
-// };
   
 export default function PostTags() {
     const [name, setName] = useState<string>("");
@@ -28,7 +25,9 @@ export default function PostTags() {
 
     const fetchData = async () => {
         try {
-          const response = await fetch('/api/TagGETAll');
+          const response = await fetch('/api/TagGETAll',{
+            cache: "no-store",
+          });
           if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
           }
@@ -82,22 +81,11 @@ export default function PostTags() {
                 <button className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded w-20 m-5" type="button" 
                 onClick={() => {
                     adding();
-                    fetchData();
+                    //fetchData();
+                    router.push("/Tags");
                     router.refresh();
                 }}>追加</button>
             </div>
         </div>
     )
 }
-
-// import { useRouter } from 'next/router'
-
-// export default function Page() {
-//   const router = useRouter()
-
-//   return (
-//     <button type="button" onClick={() => router.push('/about')}>
-//       Click me
-//     </button>
-//   )
-// }

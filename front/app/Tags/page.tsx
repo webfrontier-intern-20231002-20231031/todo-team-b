@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import DELETEButton from "../Compornents/ButtonCompornents/DELETEButton";
 import PUTButton from "../Compornents/ButtonCompornents/PUTButton";
 import POSTButton from "../Compornents/ButtonCompornents/POSTButton";
+import { useRouter } from "next/navigation";
 
 
 type Tag = {
@@ -20,7 +21,9 @@ export default function Tags() {
       // タグデータを取得する fetch リクエストを実行
       const fetchData = async () => {
         try {
-          const response = await fetch("../../api/TagGETAll/");
+          const response = await fetch("../../api/TagGETAll/", {
+            cache: "no-store",
+          });
           if (!response.ok) {
             throw new Error("Failed to fetch data");
           }
