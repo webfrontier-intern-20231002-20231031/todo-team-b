@@ -43,7 +43,6 @@ function Home() {
   };
 
   const handleTodoGETAll = () => {
-    // フィルター解除時に再度データを取得
     fetchData();
   };
 
@@ -127,8 +126,9 @@ function Home() {
     if (deletedTodo) {
         console.log(deletedTodo.id);
 
-        fetch(`/api/TodoDELETE/${deletedTodo.id}`, {
+        fetch(`/api/TodoDELETE`, {
             method: 'DELETE',
+            
         });
     } else {
         console.log(`ID ${id}のTodoは見つかりませんでした。`);
@@ -161,8 +161,8 @@ function Home() {
         <button onClick={handleSort} className="bg-blue-500 text-white p-2 rounded-md mr-2">
           期限/作成日
         </button>
-        <button onClick={handleShowIncomplete} className="bg-blue-500 text-white p-2 rounded-md mr-2">
-          未完了
+        <button onClick={handleShowCompleted} className="bg-blue-500 text-white p-2 rounded-md mr-2">
+          完了済
         </button>
         <button onClick={handleCreate} className="bg-blue-500 text-white p-2 rounded-md mr-2">
           作成
@@ -192,7 +192,7 @@ function Home() {
                 </td>
                 <td className="p-2 border">
                   <button
-                    onClick={() => handleComp(index)}
+                    onClick={() => handleComp(todo.id)}
                     className={`bg-blue-500 text-white p-2 rounded-md mr-2 w-16 ${
                       todo.completed ? 'bg-red-500' : 'bg-green-600'
                     }`}

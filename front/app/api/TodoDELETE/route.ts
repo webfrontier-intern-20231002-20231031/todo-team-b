@@ -7,9 +7,9 @@ export async function DELETE(req: NextApiRequest, res: NextApiResponse) {
   headers.append('Access-Control-Allow-Origin', '*'); // これはテスト用の設定で、実際のプロダクション環境では '*' を使用しないでください。
 
   // console.log(req.body)
-  const id = 7
+  const id = 9
 
-  await fetch(`http://127.0.0.1:8000/v1/todo/${id}`, {
+  await fetch(`http://127.0.0.1:8000/v1/todo/9`, {
     method: 'DELETE',
     headers: headers,
   })
