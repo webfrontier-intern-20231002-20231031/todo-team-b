@@ -128,9 +128,12 @@ function Home() {
     if (deletedTodo) {
         console.log(deletedTodo.id);
 
+        // fetch(`/api/TodoDELETE/${deletedTodo.id}`, {
+        //     method: 'DELETE',
+        // });
         fetch(`/api/TodoDELETE/${deletedTodo.id}`, {
-            method: 'DELETE',
-        });
+          method: 'DELETE',
+      });
     } else {
         console.log(`ID ${id}のTodoは見つかりませんでした。`);
     }
