@@ -1,19 +1,18 @@
-import { NextApiRequest } from "next";
-import { useSearchParams } from "next/navigation";
+import { NextApiRequest, NextApiResponse } from 'next';
+import { useParams } from 'next/navigation';
 
-
-export async function DELETE(request: NextApiRequest,
-  { params }: { params: { slug: string }})
-{
-
+export async function DELETE(req: NextApiRequest,
+  { params }:{params: {id : string}}){
+  const id = params.id
   // リクエストヘッダーにCORS関連の設定を追加
   const headers = new Headers();
   //必須
   headers.append('Access-Control-Allow-Origin', '*'); // これはテスト用の設定で、実際のプロダクション環境では '*' を使用しないでください。
 
-  const id = params
+  console.log(id)
+  let url = `http://127.0.0.1:8000/v1/todo/` + id;
 
-  const res = await fetch(`http://127.0.0.1:8000/v1/todo/` + id, {
+  const res = await fetch(url, {
     method: 'DELETE',
     headers: headers,
   })
@@ -25,5 +24,6 @@ export async function DELETE(request: NextApiRequest,
   };
 
   const data = res.json();
+  // return res.json({res, corsHeaders});
   return Response.json(data);
 }
