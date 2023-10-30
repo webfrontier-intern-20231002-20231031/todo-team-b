@@ -1,19 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { NextResponse } from 'next/server';
 
-interface IPost {
-  content: string;
-  //deadline: any;
-  //compflg: boolean;
-}
-
-const newPost: IPost = {
-  content: "osusi",
-};
-
 //export async function POST(req: NextApiRequest, res: NextApiResponse) {
 export async function POST(req: Request, res: NextApiResponse) {
-  //NextApiRequestこいつ何？
   // リクエストヘッダーにCORS関連の設定を追加
   const headers = new Headers();
   //必須
@@ -21,10 +10,6 @@ export async function POST(req: Request, res: NextApiResponse) {
   headers.append('Access-Control-Allow-Origin', '*'); // これはテスト用の設定で、実際のプロダクション環境では '*' を使用しないでください。
   console.log(req.body)
   const data = await req.json();
-  //console.log(data)
-  // console.log("Header")
-  // console.log(req.headers["Content-Type"])
-  //req.headers["Content-Type"]がundefinedになるのなんで？
   await fetch('http://127.0.0.1:8000/v1/todo', {
     method: 'POST',
     body: JSON.stringify(data),
