@@ -1,6 +1,7 @@
 'use client'
 import React, { useState, useEffect } from 'react';
 import { useRouter } from "next/navigation";
+import ReactPaginate from 'react-paginate';
 
 interface Todo {
   id: number;
@@ -134,7 +135,23 @@ function Home() {
         console.log(`ID ${id}のTodoは見つかりませんでした。`);
     }
 
-    };
+  };
+
+  //paginate設定
+	// ページング用のステート
+	const [currentPage, setCurrentPage] = useState(0);
+
+	// 1ページあたりのアイテム数
+	const itemsPerPage = 10; 
+
+	// 現在のページのアイテムの範囲を計算
+	const offset = currentPage * itemsPerPage;
+	const currentPageData = todos.slice(offset, offset + itemsPerPage);
+
+	// ページが変更されたときのハンドラ
+	const handlePageClick = (selectedPage: { selected: number }) => {
+		setCurrentPage(selectedPage.selected);
+	};
 
   return (
     <main className="flex min-h-screen flex-col items-center p-24">
@@ -178,7 +195,7 @@ function Home() {
             </tr>
           </thead>
           <tbody>
-            {todos.map((todo, index) => (
+            {currentPageData.map((todo, index) => (
               <tr key={index}>
                 <td className="p-2 border ">{todo.content}</td>
                 <td className="p-2 border">
@@ -209,6 +226,16 @@ function Home() {
             ))}
           </tbody>
         </table>
+        <ReactPaginate
+					previousLabel={'<'}
+					nextLabel={'>'}
+					pageCount={Math.ceil(todos.length / itemsPerPage)}
+					pageRangeDisplayed={3}
+					marginPagesDisplayed={1}
+					onPageChange={handlePageClick}
+					containerClassName="pagination"
+					activeClassName="active"
+				/>
       </div>
     </main>
   );

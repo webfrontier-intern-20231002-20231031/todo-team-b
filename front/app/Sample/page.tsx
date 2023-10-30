@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from 'react';
 import ReactPaginate from 'react-paginate';
+import { useRouter } from "next/navigation";
 
 interface Todo {
     id: number;
@@ -9,14 +10,11 @@ interface Todo {
     completed: boolean;
 }
 
-
-
 function Home() {
-
 	const [searchText, setSearchText] = useState('');
 	const [todos, setTodos] = useState<Todo[]>([]);
 	const [showCompleted, setShowCompleted] = useState(true);
-  
+	const router = useRouter();
 
 	const fetchData = async () => {
 		try {
@@ -50,15 +48,27 @@ function Home() {
 		fetchData();
 	};
 	
+
 	const handleSort = () => {
 		const sortedTodos = [...todos].sort((a, b) => {
-		  if (!a.deadline) return 1;
-		  if (!b.deadline) return -1;
-		  return a.deadline.getTime() - b.deadline.getTime();
+			if (a.deadline === null && b.deadline === null) {
+				return 0;
+			} else if (a.deadline === null) {
+				return 1;
+			} else if (b.deadline === null) {
+				return -1;
+			} else {
+				const dateA = new Date(a.deadline);
+				const dateB = new Date(b.deadline);
+				return dateA.getTime() - dateB.getTime();
+			}
 		});
 		setTodos(sortedTodos);
 	};
-	
+
+
+
+
 	const handleShowCompleted = () => {
 		const completedTodos: Todo[] = todos.filter((todo) => todo.completed);
 		setTodos(completedTodos);
@@ -72,25 +82,59 @@ function Home() {
 	};
 	
 	const handleCreate = () => {
-		// 作成ボタンの処理
-		// ...
+		router.push("/TodoPOST")
 	};
 	
 	const handleDetail = (id: number) => {
-	// 対応するTodoを検索
+		// 対応するTodoを検索
 		const selectedTodo = todos.find((todo) => todo.id === id);
 	
-		if (selectedTodo) {
-		  console.log('Selected Todo:', selectedTodo);
-		} else {
-		  console.log('Todo not found');
-		}
 	};
 	
-	const handleComp = (index: number) => {
-		const updatedTodos = [...todos];
-		updatedTodos[index].completed = !updatedTodos[index].completed;
-		setTodos(updatedTodos);
+	const handleComp = (id: number) => {
+		const updatedTodos = todos.map((todo) => {
+		  	if (todo.id === id) {
+				const updatedTodo = {
+				...todo,
+				completed: !todo.completed,
+				};
+	  
+				fetch(`/api/TodoPUTCompleted`, {
+				method: 'PUT',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(updatedTodo),
+			})
+			  .then((response) => response.json())
+			  .then((data) => {
+				console.log('Server response:', data);
+			  })
+			  .catch((error) => {
+				console.error('Error:', error);
+			  });
+	  
+			return updatedTodo;
+			}
+			return todo;
+		});
+	  
+		fetchData();
+	};
+	  
+	const handleDelete = (id: number) => {
+		const deletedTodo = todos.find((todo) => todo.id === id);
+	
+		if (deletedTodo) {
+			console.log(deletedTodo.id);
+	
+			fetch(`/api/TodoDELETE/${deletedTodo.id}`, {
+				method: 'DELETE',
+			});
+		} else {
+			console.log(`ID ${id}のTodoは見つかりませんでした。`);
+		}
+	
 	};
 
 	//paginate設定
@@ -109,7 +153,6 @@ function Home() {
 		setCurrentPage(selectedPage.selected);
 	};
 
-
 	return (
 		<main className="flex min-h-screen flex-col items-center p-24">
 			<div className="flex justify-center">
@@ -117,6 +160,7 @@ function Home() {
 					<h1 className="text-4xl">Todo一覧</h1>
 				</div>
 			</div>
+
 			<div className="flex items-center">
 				<input
 				type="text"
@@ -173,9 +217,13 @@ function Home() {
 								{todo.completed ? '未完了' : '完了'}
 							</button>
 							</td>
+							<td className="p-2 border">
+							<button onClick={() => handleDelete(todo.id)} className="bg-red-500 text-white p-2 rounded-md mr-2">
+								削除
+							</button>{' '}
+							</td>
 						</tr>
 						))}
-
 					</tbody>
 				</table>
 				<ReactPaginate
