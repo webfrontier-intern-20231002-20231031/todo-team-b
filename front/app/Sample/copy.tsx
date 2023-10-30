@@ -24,20 +24,20 @@ const Home: React.FC = () => {
 
   
 
-  useEffect(() => {
-    // APIからデータを取得してステートにセット
-    fetch('https://jsonplaceholder.typicode.com/posts', {
-    //fetch('http://127.0.0.1:8000/v1/todo', {
-    cache: "no-store",
-  })
-      .then((response) => response.json())
-      .then((data) => {
-        setData(data);
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error);
-      });
-  }, []); // 空の依存配列で初回のみ実行
+    useEffect(() => {
+        // APIからデータを取得してステートにセット
+        fetch('https://jsonplaceholder.typicode.com/posts', {
+        //fetch('http://127.0.0.1:8000/v1/todo', {
+        cache: "no-store",
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            setData(data);
+        })
+        .catch((error) => {
+            console.error('Error fetching data:', error);
+        });
+    }, []); // 空の依存配列で初回のみ実行
 
   return (
     <div>
