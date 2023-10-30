@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from "next/navigation";
 import ReactPaginate from 'react-paginate';
+import { response } from 'express';
 
 interface Todo {
   id: number;
@@ -94,32 +95,21 @@ function Home() {
     const updatedTodos = todos.map((todo) => {
       if (todo.id === id) {
         const updatedTodo = {
-          ...todo,
           completed: !todo.completed,
         };
-  
-        fetch(`/api/TodoPUTCompleted`, {
+        console.log(updatedTodo);
+
+        fetch(`/api/TodoPUTCompleted/${id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(updatedTodo),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            console.log('Server response:', data);
           })
-          .catch((error) => {
-            console.error('Error:', error);
-          });
-  
-        return updatedTodo;
+        }
       }
-      return todo;
-    });
-  
-    fetchData();
-  };
+    )
+  }
   
   const handleDelete = (id: number) => {
     const deletedTodo = todos.find((todo) => todo.id === id);

@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { useParams } from 'next/navigation';
 
 export async function DELETE(req: NextApiRequest,
   { params }:{params: {id : string}}){
