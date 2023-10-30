@@ -47,14 +47,26 @@ function Home() {
     fetchData();
   };
 
+  // ソート機能の修正
   const handleSort = () => {
     const sortedTodos = [...todos].sort((a, b) => {
-      if (!a.deadline) return 1;
-      if (!b.deadline) return -1;
-      return a.deadline.getTime() - b.deadline.getTime();
+        if (a.deadline === null && b.deadline === null) {
+            return 0;
+        } else if (a.deadline === null) {
+            return 1;
+        } else if (b.deadline === null) {
+            return -1;
+        } else {
+            const dateA = new Date(a.deadline);
+            const dateB = new Date(b.deadline);
+            return dateA.getTime() - dateB.getTime();
+        }
     });
     setTodos(sortedTodos);
-  };
+};
+
+
+
 
   const handleShowCompleted = () => {
     const completedTodos: Todo[] = todos.filter((todo) => todo.completed);
@@ -115,7 +127,7 @@ function Home() {
     if (deletedTodo) {
         console.log(deletedTodo.id);
 
-        fetch(`/api/TodoDELETE`, {
+        fetch(`/api/TodoDELETE/${deletedTodo.id}`, {
             method: 'DELETE',
         });
     } else {
