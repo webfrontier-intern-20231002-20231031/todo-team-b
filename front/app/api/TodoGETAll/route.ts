@@ -1,13 +1,13 @@
 import { NextResponse } from 'next/server';
 
-export const fetchCache = 'default-no-store';
 
 export async function GET() {
 // リクエストヘッダーにCORS関連の設定を追加
- const headers = new Headers();
- headers.append('Access-Control-Allow-Origin', '*'); 
+const headers = new Headers();
+headers.append('Access-Control-Allow-Origin', '*'); 
 
   const response = await fetch('http://127.0.0.1:8000/v1/todo', {
+    cache: "no-store",
     method: 'GET',
     headers: headers, // 上で設定したヘッダーを使ってリクエストを送信
   });

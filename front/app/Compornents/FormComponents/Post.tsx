@@ -19,17 +19,6 @@ export default function InputForm() {
     const controllerInputChangeDeadline = (e: React.ChangeEvent<HTMLInputElement>) => {
         setDeadline(e.target.value);
     }
-    //Postリクエスト発行の処理
-
-    // type Todo = {
-    //     completed: boolean;
-    //     deadline: Date;
-    //     id: number;
-    //     content: string;
-    //     tags: number[];
-    // }
-
-    // const [todos, settodos] = useState<Todo[] | null>(null);
 
     const time = "T23:59:59"
 
@@ -41,6 +30,7 @@ export default function InputForm() {
         console.log(newPost)
         try {
             const res = await fetch('/api/TodoPOST',{
+                cache: "no-store",
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
