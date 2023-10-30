@@ -1,22 +1,29 @@
-import { NextResponse } from 'next/server';
+import { NextApiRequest, NextApiResponse } from 'next';
 
-export async function GET() {
+export async function DELETE(req: NextApiRequest, res: NextApiResponse) {
   // リクエストヘッダーにCORS関連の設定を追加
   const headers = new Headers();
+  //必須
   headers.append('Access-Control-Allow-Origin', '*'); // これはテスト用の設定で、実際のプロダクション環境では '*' を使用しないでください。
 
-  const response = await fetch('http://127.0.0.1:8000/v1/todo', {
-    method: 'GET',
-    headers: headers, // 上で設定したヘッダーを使ってリクエストを送信
-  });
+  // console.log(req.body)
+  const id = 7
 
-  const data = await response.json();
+  await fetch(`http://127.0.0.1:8000/v1/todo/${id}`, {
+    method: 'DELETE',
+    headers: headers,
+  })
+  .then(res => res.json())
+  .then(json => {
+    console.log(json);
+  })
+  .catch(e => { console.error(e.message); });
 
   // レスポンスヘッダーにCORS関連の設定を追加
   const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'GET, OPTIONS', // 必要に応じて他のHTTPメソッドも設定
-    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'DELETE, OPTIONS', // 必要に応じて他のHTTPメソッドも設定
   };
 
-  return NextResponse.json(data, { headers: corsHeaders });
+  return res.json({res, corsHeaders});
+}
