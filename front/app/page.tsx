@@ -88,7 +88,9 @@ function Home() {
   const handleDetail = (id: number) => {
     // 対応するTodoを検索
     const selectedTodo = todos.find((todo) => todo.id === id);
-
+    if (selectedTodo != null){
+      router.push(`/TodoGETById/${selectedTodo.id}`)
+    }
   };
 
   const handleComp = (id: number) => {
