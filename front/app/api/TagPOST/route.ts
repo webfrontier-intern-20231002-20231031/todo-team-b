@@ -10,7 +10,7 @@ export async function POST(req: Request, res: NextApiResponse) {
   headers.append('Access-Control-Allow-Origin', '*'); // これはテスト用の設定で、実際のプロダクション環境では '*' を使用しないでください。
   console.log(req.body)
   const data = await req.json();
-  await fetch('http://127.0.0.1:8000/v1/todo', {
+  await fetch('http://127.0.0.1:8000/v1/tag', {
     cache: "no-store",
     method: 'POST',
     body: JSON.stringify(data),
