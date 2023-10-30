@@ -31,9 +31,8 @@ export default function TodoGetById() {
             console.error("Error fetching data:", error);
             }
         };
-    
-        fetchData();
-        }, []);
+    fetchData();
+    }, []);
 
     return (
         <main className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
