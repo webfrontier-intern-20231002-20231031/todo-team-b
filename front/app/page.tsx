@@ -126,7 +126,7 @@ function Home() {
     if (deletedTodo) {
         console.log(deletedTodo.id);
 
-        fetch(`/api/TodoDELETE`, {
+        fetch(`/api/TodoDELETE/${deletedTodo.id}`, {
             method: 'DELETE',
             
         });
