@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import TodoGETName from "../Compornents/TableCompornents/TodoGETName";
-import TagGETAll from "../Compornents/TableCompornents/TagGETAll";
 import DELETEButton from "../Compornents/ButtonCompornents/DELETEButton";
 import PUTButton from "../Compornents/ButtonCompornents/PUTButton";
 import TodoGETDeadline from "../Compornents/TableCompornents/TodoGETDeadline";
