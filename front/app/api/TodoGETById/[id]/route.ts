@@ -17,7 +17,7 @@ export async function GET({ params }:{params: {id : string}})
     // レスポンスヘッダーにCORS関連の設定を追加
   const corsHeaders = {
     'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'DELETE, OPTIONS', // 必要に応じて他のHTTPメソッドも設定
+    'Access-Control-Allow-Methods': 'GET, OPTIONS', // 必要に応じて他のHTTPメソッドも設定
   };
 
   const data = res.json();

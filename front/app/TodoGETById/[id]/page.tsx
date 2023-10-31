@@ -2,10 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 
-import TodoGETName from "../../Compornents/TableCompornents/TodoGETName";
 import DELETEButton from "../../Compornents/ButtonCompornents/DELETEButton";
 import PUTButton from "../../Compornents/ButtonCompornents/PUTButton";
-import TodoGETDeadline from "../../Compornents/TableCompornents/TodoGETDeadline";
 
 interface Todo {
     id: number;
@@ -20,33 +18,40 @@ interface Tag {
     todos: string; // 使わない
 };
 
-export default function TodoGetById({ params }: { params: { id: number } }) {
+export default function TodoGETById({ params }: { params: { id: number } }) {
 
-    const taskid = params.id
+    const id = params.id
+    console.log(id)
     //GETTodo
-    const [todo, setTodo] = useState<Todo[]>([]);
+    const [todos, setTodos] = useState<Todo[]>([]);
+    const [selectedTodo, setSelectedTodo] = useState<Todo | null>(null);
     
-    const fetchData = async () => {
-        try {
-          const response = await fetch(`/api/TodoGETById/${taskid}`);
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
+    useEffect(() => {
+        const fetchData = async () => {
+          try {
+            const response = await fetch('/api/TodoGETAll');
+            if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const data: Todo[] = await response.json();
+      
+            const todoToDisplay = data.find((todo) => todo.id === id);
+            setSelectedTodo(todoToDisplay || null);
+          } catch (error) {
+            console.error('Error:', error);
           }
-          const data: Todo[] = await response.json();
-    
-          // 取得したデータをコンポーネントの状態にセット
-          setTodo(data);
-          console.log(data)
-        } catch (error) {
-          console.error('Error:', error);
         }
-      }
-    
-      // fetchDataをuseEffect内に移動して、コンポーネントがマウントされた時に実行
-      useEffect(() => {
-        fetchData();
-      }, []);
-    // const targetTodo = todo.find((todo) => todo.id === TodoId);
+      
+        fetchData();  // fetchDataをuseEffect内で呼び出す
+      
+      }, [id]); // idを依存関係の配列に含める
+
+    useEffect(() => {
+        // 指定したIDに一致するTodoデータを抽出
+        const todoToDisplay = todos.find((todo) => todo.id === id);
+        setSelectedTodo(todoToDisplay || null); // 見つからない場合はnullをセット
+        console.log(todoToDisplay)
+      }, [id, todos]);
 
     //GETTag
     const [tags, setTags] = useState<Tag[]>([]);
@@ -74,31 +79,17 @@ export default function TodoGetById({ params }: { params: { id: number } }) {
 
             <div className="flex justify-between">
                 <div className="w-full m-5">
-                    {/* <div className="max-w-md mx-auto rounded-lg shadow-md overflow-hidden">
-                        {targetTodo ? (   
-                            // id={TodoId}:は確認用、後で消して良い
-                            <p>id={TodoId}: {targetTodo.content}</p>
-                        ) : (
-                            //最初読み込みで出る、消して良い
-                            <p>Todo not found for id {TodoId}</p>
-                        )}
-                    </div>
+                {selectedTodo ? (
                     <div>
-                    {targetTodo ? (   
-                            // id={TodoId}:は確認用、後で消して良い
-                            <p>id={TodoId}: {targetTodo.deadline? new Date(targetTodo.deadline).toLocaleString() : 'なし'}</p>
-                        ) : (
-                            <p>Todo not found for id {TodoId}</p>
-                        )}
+                    <h2>Todo Details</h2>
+                    <p>ID: {selectedTodo.id}</p>
+                    <p>Content: {selectedTodo.content}</p>
+                    <p>Deadline: {selectedTodo.deadline ? new Date(selectedTodo.deadline).toLocaleString() : 'なし'}</p>
+                    <p>Status: {selectedTodo.completed ? '完了' : '未完了'}</p>
                     </div>
-                    <div>
-                    {targetTodo ? (   
-                            // id={TodoId}:は確認用、後で消して良い
-                            <p>id={TodoId}: {targetTodo.completed ? '完了' : '未完了'}</p>
-                        ) : (
-                            <p>Todo not found for id {TodoId}</p>
-                        )}
-                    </div> */}
+                ) : (
+                    <p>Loading...</p>
+                )}
                 </div>
                 <div className="w-full m-5">
                     <div className="max-w-md mx-auto rounded-lg shadow-md overflow-hidden">
