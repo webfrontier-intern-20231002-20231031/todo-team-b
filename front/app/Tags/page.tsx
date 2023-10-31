@@ -48,7 +48,7 @@ export default function Tags() {
                 <h1 className="text-lg font-bold">タグ一覧</h1>
                 <ul>
                     {tags.map((tag) => (
-                    <li key={tag.id}>{tag.name}</li>
+                    <li key={tag.id}>ID{tag.id}:{tag.name}</li>
                     ))}
                 </ul>
                 </div>
@@ -61,7 +61,7 @@ export default function Tags() {
         <div className="text-center">
             <div>
             <DELETEButton />
-            <PUTButton />
+            {/* <PUTButton /> */}
             </div>
         </div>
         </main>

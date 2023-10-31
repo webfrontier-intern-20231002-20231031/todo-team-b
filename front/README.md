@@ -2,6 +2,9 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
+#### 10/30追記(途中からの作業向け)
+追加ライブラリのインストール　`npm install react-paginate`
+
 First, run the development server:
 
 ```bash
