@@ -172,8 +172,8 @@ function Home() {
         <button onClick={handleSort} className="bg-blue-500 text-white p-2 rounded-md mr-2">
           期限/作成日
         </button>
-        <button onClick={handleShowCompleted} className="bg-blue-500 text-white p-2 rounded-md mr-2">
-          完了済
+        <button onClick={handleShowIncomplete} className="bg-blue-500 text-white p-2 rounded-md mr-2">
+          未完了
         </button>
         <button onClick={handleCreate} className="bg-blue-500 text-white p-2 rounded-md mr-2">
           作成
