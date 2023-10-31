@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import DELETEButton from "../Compornents/ButtonCompornents/DELETEButton";
 import PUTButton from "../Compornents/ButtonCompornents/PUTButton";
 import POSTButton from "../Compornents/ButtonCompornents/POSTButton";
-import { useRouter } from "next/navigation";
 
 
 type Tag = {

@@ -33,6 +33,7 @@ export default function DeleteTag(){
             alert(err)
         }
         setId("");
+        location.reload();
     }
     return (
         <div>

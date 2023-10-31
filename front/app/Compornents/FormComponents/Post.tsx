@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import React, {useState} from "react";
 
 interface IPost {
@@ -38,6 +39,14 @@ export default function InputForm() {
                 body: JSON.stringify(newPost),
             });
             //console.log(res)
+            if (res.status === 200) {
+                alert('タグ追加！');
+                console.log(res);
+                redirect('./');
+            } else {
+                // エラーハンドリング
+                alert('送信に失敗しました。');
+            }
         } catch (err){
             alert(err)
         }

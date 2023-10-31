@@ -60,6 +60,7 @@ export default function PostTags() {
         //fetchData();
         //redirect();
         setName("");
+        location.reload();
     }
     
     return (
