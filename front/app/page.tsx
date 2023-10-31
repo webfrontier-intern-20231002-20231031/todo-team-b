@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from "next/navigation";
 import ReactPaginate from 'react-paginate';
+import { response } from 'express';
 
 interface Todo {
   id: number;
@@ -44,7 +45,6 @@ function Home() {
   };
 
   const handleTodoGETAll = () => {
-    // フィルター解除時に再度データを取得
     fetchData();
   };
 
@@ -88,39 +88,30 @@ function Home() {
   const handleDetail = (id: number) => {
     // 対応するTodoを検索
     const selectedTodo = todos.find((todo) => todo.id === id);
-
+    if (selectedTodo != null){
+      router.push(`/TodoGETById/${selectedTodo.id}`)
+    }
   };
 
   const handleComp = (id: number) => {
     const updatedTodos = todos.map((todo) => {
       if (todo.id === id) {
         const updatedTodo = {
-          ...todo,
           completed: !todo.completed,
         };
-  
-        fetch(`/api/TodoPUTCompleted`, {
+        console.log(updatedTodo);
+
+        fetch(`/api/TodoPUTCompleted/${id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(updatedTodo),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            console.log('Server response:', data);
           })
-          .catch((error) => {
-            console.error('Error:', error);
-          });
-  
-        return updatedTodo;
+        }
       }
-      return todo;
-    });
-  
-    fetchData();
-  };
+    )
+  }
   
   const handleDelete = (id: number) => {
     const deletedTodo = todos.find((todo) => todo.id === id);
@@ -212,7 +203,7 @@ function Home() {
                 </td>
                 <td className="p-2 border">
                   <button
-                    onClick={() => handleComp(index)}
+                    onClick={() => handleComp(todo.id)}
                     className={`bg-blue-500 text-white p-2 rounded-md mr-2 w-16 ${
                       todo.completed ? 'bg-red-500' : 'bg-green-600'
                     }`}
