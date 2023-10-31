@@ -119,7 +119,8 @@ function Home() {
       return todo;
     });
   
-    fetchData();
+    //fetchData();
+    location.reload();
   };
   
   const handleDelete = (id: number) => {
@@ -134,6 +135,7 @@ function Home() {
         fetch(`/api/TodoDELETE/${deletedTodo.id}`, {
           method: 'DELETE',
       });
+      location.reload();
     } else {
         console.log(`ID ${id}のTodoは見つかりませんでした。`);
     }

@@ -38,9 +38,17 @@ export default function InputForm() {
                 body: JSON.stringify(newPost),
             });
             //console.log(res)
+            if (res.status === 200) {
+                // alert('タグ追加！');
+                console.log(res);
+            } else {
+                // エラーハンドリング
+                alert('送信に失敗しました。');
+            }
         } catch (err){
             alert(err)
         }
+        location.reload();
     }
 
     return (
@@ -64,7 +72,7 @@ export default function InputForm() {
                         type="text"
                         //classNameはCSSのクラス名を指定する
                         className="w-full border-gray-300 mt-10 px-7 py-8 rounded-md"
-                        placeholder="期限を入力してください ex)2023-10-31"
+                        placeholder="期限を入力してください ex)2023-01-01"
                         value={deadline}
                         onChange={controllerInputChangeDeadline}
                     />
