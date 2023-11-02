@@ -29,11 +29,17 @@ def SessionLocal():
     session.add(new_tag)
     session.commit()
 
-    new_todo = TodoModel(content = "買い物する")
+    new_todo = TodoModel(content="買い物する")
     session.add(new_todo)
-    new_todo = TodoModel(content = "帰宅する")
+    new_todo = TodoModel(content="帰宅する")
     session.add(new_todo)
     session.commit()
+
+    # リレーションの作り方
+    # 呼び出す
+    # new_todo = TodoModel(content = "買い物する")
+    # session.add(new_todo)
+    # 上記のようにデータを挿入する
 
     yield SessionLocal
 
