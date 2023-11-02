@@ -107,12 +107,13 @@ def test_read_tag_by_id():
     assert json_body["name"] == "コーヒーを買う"
 
 
-# @temp_db
-# def test_delete_tag():
-#     response = client.delete(
-#         "/v1/tag/1",
-#     )
-#     assert response.status_code == 200
+# id指定のTagテーブルへのDELETEリクエスト正常処理テスト
+@temp_db
+def test_delete_tag():
+    response = client.delete(
+        "/v1/tag/1",
+    )
+    assert response.status_code == 200
 
 
 # def test_read_item_bad_token():
