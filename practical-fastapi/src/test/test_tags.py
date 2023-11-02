@@ -86,6 +86,14 @@ def test_read_tag_by_inexistent_id():
 
 
 @temp_db
+# id指定のTagテーブルへのPUTリクエスト404エラーハンドリングテスト
+def test_update_tag_by_inexistent_id():
+    response = client.get("/v1/tag/1000")
+    assert response.status_code == 404
+    assert response.json() == {"detail": "Tag not found"}
+
+
+@temp_db
 # id指定のTagテーブルへのDELETEリクエスト404エラーハンドリングテスト
 def test_delete_tag_by_inexistent_id():
     response = client.get("/v1/tag/1000")
