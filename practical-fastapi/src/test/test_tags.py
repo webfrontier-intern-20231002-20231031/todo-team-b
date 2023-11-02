@@ -96,9 +96,10 @@ def test_create_tag():
     assert response.status_code == 200
     assert response.json() == {"id": 3, "name": "CreateTest", "todos": []}
 
+
 @temp_db
 # id指定のTagテーブルへのGETリクエスト正常処理テスト
-def test_read_tag_by_id():
+def test_read_tag_all():
     response = client.get("/v1/tag/")
     assert response.status_code == 200
     # assert response.json() == {"id": 1, "name": "CreateTest", "todos": []}
