@@ -32,6 +32,7 @@ class completedFlg:
     def getter(self):
         return self.flg
 
+
 # #PUTリクエストで利用できるようにオブジェクト作成
 # todo = completedFlg()
 # # id指定のTodoテーブルへのGETリクエスト正常処理テスト
@@ -93,12 +94,23 @@ def test_create_tag():
         json={"name": "CreateTest"},
     )
     assert response.status_code == 200
-    assert response.json() == {"id": 1, "name": "CreateTest", "todos": []}
+    assert response.json() == {"id": 2, "name": "CreateTest", "todos": []}
 
 
+# @temp_db
+# # # id指定のTagテーブルへのGETリクエスト正常処理テスト
+# def test_read_tag_by_id():
+#     response = client.get("/v1/tag/1")
+#     assert response.status_code == 200
+#     # assert response.json() == {"id": 1, "name": "CreateTest", "todos": []}
+#     json_body = response.json()
+#     assert json_body["name"] == "コーヒーを買う"
+
+
+# @temp_db
 # def test_delete_tag():
 #     response = client.delete(
-#         "/v1/tag/170",
+#         "/v1/tag/1",
 #     )
 #     assert response.status_code == 200
 
