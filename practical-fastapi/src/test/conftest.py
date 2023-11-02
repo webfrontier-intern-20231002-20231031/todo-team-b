@@ -1,10 +1,11 @@
 import pytest
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import context, sessionmaker
 from sqlalchemy_utils import database_exists, drop_database
 
 from app.database import Base
 from models.tag import TagModel
+from models.todo import TodoModel
 
 
 ## ここではSQLiteを使ったユニットテストの共通部分を書く
@@ -26,6 +27,12 @@ def SessionLocal():
     session.add(new_tag)
     new_tag = TagModel(name="カフェオレを作る")
     session.add(new_tag)
+    session.commit()
+
+    new_todo = TodoModel(content = "買い物する")
+    session.add(new_todo)
+    new_todo = TodoModel(content = "帰宅する")
+    session.add(new_todo)
     session.commit()
 
     yield SessionLocal
