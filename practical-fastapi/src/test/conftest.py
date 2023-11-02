@@ -24,6 +24,8 @@ def SessionLocal():
     session = SessionLocal()
     new_tag = TagModel(name="コーヒーを買う")
     session.add(new_tag)
+    new_tag = TagModel(name="カフェオレを作る")
+    session.add(new_tag)
     session.commit()
 
     yield SessionLocal
