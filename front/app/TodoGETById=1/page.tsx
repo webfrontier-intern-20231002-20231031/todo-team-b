@@ -23,7 +23,7 @@ export default function TodoGetById3() {
 
     //GETTodo
     const [todo, setTodo] = useState<Todo[]>([]);
-    const [TodoId, setTodoId] = useState(3);
+    const [TodoId, setTodoId] = useState(1);
     useEffect(() => {
         const fetchTodo = async () => {
             try {

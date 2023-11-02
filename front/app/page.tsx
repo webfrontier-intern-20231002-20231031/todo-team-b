@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from "next/navigation";
 import ReactPaginate from 'react-paginate';
-import { response } from 'express';
 
 interface Todo {
   id: number;
@@ -111,6 +110,7 @@ function Home() {
         }
       }
     )
+    location.reload();
   }
   
   const handleDelete = (id: number) => {
@@ -178,6 +178,7 @@ function Home() {
         <button onClick={handleCreate} className="bg-blue-500 text-white p-2 rounded-md mr-2">
           作成
         </button>
+        <button className="bg-blue-500 text-white p-2 rounded-md mr-2"><a href="./Tags">タグ一覧</a></button>
       </div>
       <div className="mt-4">
         <table className="border-collapse border" cellSpacing="0">
@@ -227,7 +228,10 @@ function Home() {
 					pageRangeDisplayed={3}
 					marginPagesDisplayed={1}
 					onPageChange={handlePageClick}
-					containerClassName="pagination"
+					containerClassName="pagination flex justify-center "
+          pageClassName="pageClass m-5"
+          previousClassName="pageClass m-5"
+          nextClassName='pageClass m-5'
 					activeClassName="active"
 				/>
       </div>

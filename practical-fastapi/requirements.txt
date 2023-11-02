@@ -10,3 +10,6 @@ debugpy
 alembic
 sqlalchemy-seeder
 psycopg2
+pytest
+httpx
+sqlalchemy_utils
