@@ -25,18 +25,7 @@ def temp_db(f):
 
 
 @temp_db
-# id指定のTagテーブルへのPUTリクエスト正常処理テスト
-def test_update_tag_by_id():
-    response = client.put(
-        "/v1/tag/1",
-        headers={"Content-Type": "application/json"},
-        json={"name": "ホットドックを作る"},
-    )
-    assert response.status_code == 200
-
-
-@temp_db
-# Tagテーブル一覧のGETリクエスト正常処理テスト
+# Tagテーブル一覧のPOSTリクエスト正常処理テスト
 def test_create_tag():
     response = client.post(
         "/v1/tag",
@@ -66,6 +55,17 @@ def test_read_tag_by_id():
     # assert response.json() == {"id": 1, "name": "CreateTest", "todos": []}
     json_body = response.json()
     assert json_body["name"] == "コーヒーを買う"
+
+
+@temp_db
+# id指定のTagテーブルへのPUTリクエスト正常処理テスト
+def test_update_tag_by_id():
+    response = client.put(
+        "/v1/tag/1",
+        headers={"Content-Type": "application/json"},
+        json={"name": "ホットドックを作る"},
+    )
+    assert response.status_code == 200
 
 
 @temp_db
