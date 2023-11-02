@@ -79,14 +79,16 @@ class completedFlg:
 #     assert response.json() == {"id": 140, "name": "消したからいけるやろ", "todos": []}
 
 
+# @temp_db
 # # id指定のTagテーブルへのGETリクエスト404エラーハンドリングテスト
 # def test_read_tag_by_inexistent_id():
-#     response = client.get("/v1/tag/400")
+#     response = client.get("/v1/tag/1000")
 #     assert response.status_code == 404
 #     assert response.json() == {"detail": "Tag not found"}
 
 
 @temp_db
+# Tagテーブル一覧のGETリクエスト正常処理テスト
 def test_create_tag():
     response = client.post(
         "/v1/tag",
@@ -94,25 +96,37 @@ def test_create_tag():
         json={"name": "CreateTest"},
     )
     assert response.status_code == 200
-    assert response.json() == {"id": 2, "name": "CreateTest", "todos": []}
+    assert response.json() == {"id": 3, "name": "CreateTest", "todos": []}
 
 
-# @temp_db
-# # # id指定のTagテーブルへのGETリクエスト正常処理テスト
-# def test_read_tag_by_id():
-#     response = client.get("/v1/tag/1")
-#     assert response.status_code == 200
-#     # assert response.json() == {"id": 1, "name": "CreateTest", "todos": []}
-#     json_body = response.json()
-#     assert json_body["name"] == "コーヒーを買う"
+@temp_db
+# Tagテーブル一覧のGETリクエスト正常処理テスト
+def test_read_tag_all():
+    response = client.get("/v1/tag/")
+    assert response.status_code == 200
+    # assert response.json() == {"id": 1, "name": "CreateTest", "todos": []}
+    json_body = response.json()
+    assert json_body[0]["name"] == "コーヒーを買う"
+    assert json_body[1]["name"] == "カフェオレを作る"
 
 
-# @temp_db
-# def test_delete_tag():
-#     response = client.delete(
-#         "/v1/tag/1",
-#     )
-#     assert response.status_code == 200
+@temp_db
+# id指定のTagテーブルへのGETリクエスト正常処理テスト
+def test_read_tag_by_id():
+    response = client.get("/v1/tag/1")
+    assert response.status_code == 200
+    # assert response.json() == {"id": 1, "name": "CreateTest", "todos": []}
+    json_body = response.json()
+    assert json_body["name"] == "コーヒーを買う"
+
+
+@temp_db
+# id指定のTagテーブルへのDELETEリクエスト正常処理テスト
+def test_delete_tag():
+    response = client.delete(
+        "/v1/tag/1",
+    )
+    assert response.status_code == 200
 
 
 # def test_read_item_bad_token():
