@@ -42,14 +42,12 @@ def update(
                     if tag_model is None:
                         tag_model = TagModel(**tag)
                         update_tags.append(tag_model)
+            for new_tag in list(set(update_tags) - set(todo_model.tags)):
+                todo_model.tags.append(new_tag)
+            for remove_tag in list(set(todo_model.tags) - set(update_tags)):
+                todo_model.tags.remove(remove_tag)
         else:
             setattr(todo_model, key, value)
-
-    for new_tag in list(set(update_tags) - set(todo_model.tags)):
-        todo_model.tags.append(new_tag)
-    for remove_tag in list(set(todo_model.tags) - set(update_tags)):
-        todo_model.tags.remove(remove_tag)
-
     db.add(todo_model)
     db.commit()
     db.refresh(todo_model)

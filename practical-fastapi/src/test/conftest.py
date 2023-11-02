@@ -4,6 +4,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy_utils import database_exists, drop_database
 
 from app.database import Base
+from models.tag import TagModel
 
 
 ## ここではSQLiteを使ったユニットテストの共通部分を書く
@@ -19,6 +20,11 @@ def SessionLocal():
 
     Base.metadata.create_all(engine)
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+    session = SessionLocal()
+    new_tag = TagModel(name="コーヒーを買う")
+    session.add(new_tag)
+    session.commit()
 
     yield SessionLocal
 
