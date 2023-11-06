@@ -6,6 +6,7 @@ from sqlalchemy_utils import database_exists, drop_database
 from app.database import Base
 from models.tag import TagModel
 from models.todo import TodoModel
+from models.todo_tag import TodoTagModel
 
 
 ## ここではSQLiteを使ったユニットテストの共通部分を書く
@@ -37,9 +38,11 @@ def SessionLocal():
 
     # リレーションの作り方
     # 呼び出す
-    # new_todo = TodoModel(content = "買い物する")
-    # session.add(new_todo)
-    # 上記のようにデータを挿入する
+    new_todo_tag = TodoTagModel(todo_id="1", tag_id="1")
+    session.add(new_todo_tag)
+    new_todo_tag = TodoTagModel(todo_id="1", tag_id="2")
+    session.add(new_todo_tag)
+    session.commit()
 
     yield SessionLocal
 
