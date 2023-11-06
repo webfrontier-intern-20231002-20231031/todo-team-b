@@ -32,11 +32,26 @@ def test_get_todo():
     assert res_js[1]["content"] == "帰宅する"
 
 @temp_db
+def test_get_todo_tag():
+    response = client.get("/v1/todo/")
+    assert response.status_code == 200
+    res_js = response.json()
+    assert res_js[0]["tags"][0]["id"] == 1
+    assert res_js[0]["tags"][1]["name"] == "カフェオレを作る"
+
+@temp_db
 def test_get_todo_by_id():
     response = client.get("/v1/todo/1")
     assert response.status_code == 200
     res_js = response.json()
     assert res_js["content"] == "買い物する"
+
+@temp_db
+def test_get_todo_by_id_tag():
+    response = client.get("/v1/todo/1")
+    assert response.status_code == 200
+    res_js = response.json()
+    assert res_js["tags"][0]["id"] == 1
 
 @temp_db
 def test_create_todo():
