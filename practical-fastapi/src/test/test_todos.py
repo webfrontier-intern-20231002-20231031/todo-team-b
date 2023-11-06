@@ -52,3 +52,23 @@ def test_create_todo():
 def test_delete_todo():
     response = client.delete("/v1/todo/1")
     assert response.status_code == 200
+
+
+# error version
+@temp_db
+def test_get_todo_by_id_error():
+    response = client.get("/v1/todo/3")
+    assert response.status_code == 404
+
+@temp_db
+def test_create_todo_error():
+    response = client.post(
+        "/v1/todo",
+        json={"contents": "test todo"}
+    )
+    assert response.status_code == 422
+
+@temp_db
+def test_delete_todo_test():
+    response = client.delete("/v1/todo/3")
+    assert response.status_code == 200
