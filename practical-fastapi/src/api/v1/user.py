@@ -30,4 +30,4 @@ def login(user_schema: UserSchema, db: Session = Depends(database.get_db)):
         raise HTTPException(status_code=401, detail="Error")
     if user_schema.password != user_account.password:
         raise HTTPException(status_code=401, detail="Error")
-    return user_account.user_id
+    return user_account.username

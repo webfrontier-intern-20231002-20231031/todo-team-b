@@ -14,10 +14,8 @@ class TagSchemaBase(BaseModel):
 
 
 class UserSchema(BaseModel):
-    userid: int | None = None
-    username: str
-    password: str
-    email: str
+    email: str | None = None
+    password: str | None = None
 
 
 class TodoTagSchema(TagSchemaBase):
@@ -52,16 +50,6 @@ class CreateUpdateTagSchema(TagSchemaBase):
     name: str
 
 
-
-
-class CreateUserSchema(UserSchema):
-    username: str
-    password: str
-    email: str
-
-
 # 更新の処理を実装する際に利用する
 # class UpdateUserSchema(UserSchema):
 #     username: str | None = None
-#     password: str | None = None
-#     email: str | None = None
