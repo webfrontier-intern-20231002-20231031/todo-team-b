@@ -12,7 +12,7 @@ export default function Header() {
             </label>
           </div>
           <div className="flex-1">
-            <a className="btn btn-ghost normal-case text-xl">TodoList</a>
+            <a href="./" className="btn btn-ghost normal-case text-xl">TodoList</a>
           </div>
           <div className="flex-none">
             <button className="btn btn-square btn-ghost">
@@ -25,8 +25,8 @@ export default function Header() {
         <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
         <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
           {/* Sidebar content here */}
-          <li><a>TodoPOST</a></li>
-          <li><a>Tags</a></li>
+          <li><a href="/TodoPOST">TodoPOST</a></li>
+          <li><a href="/Tags">Tags</a></li>
         </ul>
       </div>
     </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import Post from "../Compornents/FormComponents/Post";
+import Header from '../Compornents/Header';
 import React, { useState, useEffect } from 'react';
 
 interface Tag {
@@ -34,7 +35,8 @@ export default function InputForm() {
     }, []);
 
     return (
-        <main className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
+        <main className="flex min-h-screen flex-col items-center">
+            <Header/>
             <div className="flex justify-between">
                 <div className="w-full m-5">
                     <Post />
