@@ -48,6 +48,15 @@ def test_read_tag_all():
 
 
 @temp_db
+def test_read_tag_all_todo():
+    response = client.get("/v1/tag/")
+    assert response.status_code == 200
+    json_body = response.json()
+    assert json_body[0]["todos"][0]["id"] == 1
+    assert json_body[1]["todos"][0]["content"] == "買い物する"
+
+
+@temp_db
 # id指定のTagテーブルへのGETリクエスト正常処理テスト
 def test_read_tag_by_id():
     response = client.get("/v1/tag/1")
@@ -55,6 +64,13 @@ def test_read_tag_by_id():
     # assert response.json() == {"id": 1, "name": "CreateTest", "todos": []}
     json_body = response.json()
     assert json_body["name"] == "コーヒーを買う"
+
+@temp_db
+def test_read_tag_by_id_todo():
+    response = client.get("/v1/tag/1")
+    assert response.status_code == 200
+    json_body = response.json()
+    assert json_body["todos"][0]["id"] == 1
 
 
 @temp_db
