@@ -1,4 +1,5 @@
 from datetime import datetime
+
 from pydantic import BaseModel, ConfigDict
 
 
@@ -10,6 +11,13 @@ class TodoSchemaBase(BaseModel):
 
 class TagSchemaBase(BaseModel):
     model_config = ConfigDict(from_attributes=True)
+
+
+class UserSchema(BaseModel):
+    userid: int | None = None
+    username: str
+    password: str
+    email: str
 
 
 class TodoTagSchema(TagSchemaBase):
@@ -42,3 +50,18 @@ class TagSchema(TodoTagSchema):
 
 class CreateUpdateTagSchema(TagSchemaBase):
     name: str
+
+
+
+
+class CreateUserSchema(UserSchema):
+    username: str
+    password: str
+    email: str
+
+
+# 更新の処理を実装する際に利用する
+# class UpdateUserSchema(UserSchema):
+#     username: str | None = None
+#     password: str | None = None
+#     email: str | None = None
