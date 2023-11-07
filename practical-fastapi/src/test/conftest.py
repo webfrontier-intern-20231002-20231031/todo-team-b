@@ -13,6 +13,8 @@ from models.todo_tag import TodoTagModel
 ## 関数毎で一時的にDatabaseを生成し、処理終了後に削除する
 @pytest.fixture(scope="function")
 def SessionLocal():
+    if database_exists("sqlite:///./test_temp.db"):
+        drop_database("sqlite:///./test_temp.db")
     TEST_SQLALCHEMY_DATABASE_URL = "sqlite:///./test_temp.db"
     engine = create_engine(
         TEST_SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
