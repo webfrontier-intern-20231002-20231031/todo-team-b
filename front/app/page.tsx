@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from "next/navigation";
 import ReactPaginate from 'react-paginate';
+import Header from './Compornents/Header';
 
 interface Todo {
   id: number;
@@ -148,14 +149,10 @@ function Home() {
 	};
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-24">
-      <div className="flex justify-center">
-        <div className="z-10 max-w-5xl w-full items-center font-mono text-sm lg:flex m-8">
-          <h1 className="text-4xl">Todo一覧</h1>
-        </div>
-      </div>
 
-      <div className="flex items-center">
+    <main className="flex min-h-screen flex-col items-center">
+      <Header/>
+      <div className="flex items-center my-4">
         <input
           type="text"
           placeholder="Todo検索"
