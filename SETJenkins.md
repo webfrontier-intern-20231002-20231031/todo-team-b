@@ -19,7 +19,7 @@ Jenkinsでのpipelineの作成
 ### Jenkinsの構築
 pythonのテストを行うために、Jenkinsを構築する。
 
-[公式チュートリアル](https://www.jenkins.io/doc/tutorials/build-a-python-app-with-pyinstaller/)に則って途中までは構築をする
+[公式チュートリアル](https://www.jenkins.io/doc/tutorials/build-a-python-app-with-pyinstaller/)を参考
 
 ブリッジネットワークの作成
 ```Termainal
