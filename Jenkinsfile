@@ -15,6 +15,7 @@ pipeline {
                 }
             }
             steps {
+                sh 'HELLO'
                 sh 'cd practical-fastapi/src/test; python -m py_compile conftest.py test_tags.py test_todos.py'
                 // stash(name: 'compiled-results', includes: 'practical-fast-api/src/test/*.py*')
             }
