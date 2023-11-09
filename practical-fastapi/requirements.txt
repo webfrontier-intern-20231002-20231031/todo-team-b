@@ -13,3 +13,7 @@ psycopg2
 pytest
 httpx
 sqlalchemy_utils
+
+cd ./practical-fastapi
+asdf local python 3.11.5
+poetry run pytest
