@@ -112,7 +112,7 @@ Configrationの設定を行う
 他の部分は空欄でOK
 2023/11/09現在、中止ボタンを押しても入力画面が閉じないため、リロードが必要（入力内容は保持されるはず）
 
-`Script Path`に`Jenkinsfile`を入力する
+`Script Path`に`Jenkins/Jenkinsfile`を入力する
 
 `Save`を選択する
 ビルドの実行を行う
