@@ -223,5 +223,5 @@ Active：チェックボタンを入れて、`Add webhook`を選択する
 #### Jenkins側の設定を修正する
 Jenkinsのダッシュボード画面から`General`->`GitHub hook trigger for GITScm polling`にチェックを入れる
 
-ここまででpushで自動テストができるようになった。
+ここまでで対象のブランチへのpushで自動テストができるようになった。
 
