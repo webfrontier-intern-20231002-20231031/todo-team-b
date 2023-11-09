@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function Header() {
   return (
-    <div className="sticky top-0 w-full">
+    <div className="sticky top-0 w-full z-10">
       <div className="drawer">
         <input id="my-drawer" type="checkbox" className="drawer-toggle" />
         <div className="drawer-content">
@@ -24,7 +24,7 @@ export default function Header() {
         </div> 
         <div className="drawer-side">
           <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
-          <ul className="menu p-4 w-80 min-h-full bg-base-200 text-base-content">
+          <ul className="menu p-4 w-60 min-h-full bg-base-200 text-base-content">
             {/* Sidebar content here */}
             <li><a href="/TodoPOST">TodoPOST</a></li>
             <li><a href="/Tags">Tags</a></li>
