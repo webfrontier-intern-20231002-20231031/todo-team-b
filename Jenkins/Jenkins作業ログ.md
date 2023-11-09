@@ -197,3 +197,11 @@ Configrationの設定を行う
 
 ダッシュボードのBlueOceanから作成したpipelineを選択する
 初期だと`Run`ボタンが画面に出るため、`Run`を選択する
+
+### 自動テストの実装
+- jenkinsでのAPIトークンの払い出し
+- github webhookを作成する
+
+#### jenkinsでのAPIトークンの払い出し
+https://zenn.dev/tasada038/articles/fc7730f98d8f0a
+https://dashboard.ngrok.com/
