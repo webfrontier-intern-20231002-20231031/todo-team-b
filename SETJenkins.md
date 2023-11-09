@@ -94,7 +94,7 @@ docker logs jenkins-blueocean
 
 ダッシュボードから`新規ジョブ作成`を選択する
 ジョブ名を決めて、パイプラインを選択する
-’OK’を選択する
+`OK`を選択する
 
 Configrationの設定を行う
 `General`タブから、`パイプライン`の`定義`を`Pipeline script from SCM`に変更する
