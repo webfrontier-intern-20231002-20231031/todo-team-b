@@ -12,7 +12,7 @@ mac
 Jenkinsの構築
 Jenkinsでのpipelineの作成
 
-###　利用するもの
+### 利用するもの
 - git
 - docker
 
