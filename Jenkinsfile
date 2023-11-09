@@ -30,11 +30,6 @@ pipeline {
                 sh 'echo "Testing the project"'
                 sh 'cd practical-fastapi; pytest'
             }
-            // post {
-            //     always {
-            //         junit 'test-reports/results.xml'
-            //     }
-            // }
         }
     }
 }

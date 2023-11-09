@@ -16,6 +16,9 @@ Jenkinsでのpipelineの作成
 - git
 - docker
 
+### 環境周りの注意点
+mac Sonomaの場合、port5000がair playが利用しているためair playを止めるなり、ポートを変更するなり作業を行う必要がある
+
 ### Jenkinsの構築
 pythonのテストを行うために、Jenkinsを構築する。
 
