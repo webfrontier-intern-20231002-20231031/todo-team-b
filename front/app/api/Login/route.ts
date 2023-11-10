@@ -12,15 +12,22 @@ export async function POST(req: Request) {
     const headers = new Headers();
     headers.append("Content-Type", "application/json");
 
+    let responseStatus
     await fetch('http://localhost:8000/v1/user/login', {
         method: 'POST',
         body: JSON.stringify(res_js),
         headers: headers,
     })
-    .then(res => res.json())
-    .then(json => {
-    console.log(json);
+    .then(res => {
+        responseStatus = res.status;
+        return res.json();
     })
-    .catch(e => { console.error(e.message); });
-    return NextResponse.json({ text: 'Hello' });
+    .then(json => {
+      console.log("server side success : ", json)
+    })
+    .catch(error => {
+      console.error('server side error : ', error)
+    })
+    console.log(responseStatus)
+    return NextResponse.json({ status: responseStatus });
 }

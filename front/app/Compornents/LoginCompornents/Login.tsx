@@ -1,6 +1,7 @@
 "use client";
 
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
+import Router from 'next/router'
 
 
 export default function InputForm() {
@@ -12,6 +13,7 @@ export default function InputForm() {
 
     const [emailValue, setEmailValue] = useState("");
     const [passwordValue, setPasswordValue] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
 
     const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         console.log(e.target.value);
@@ -23,7 +25,8 @@ export default function InputForm() {
         setPasswordValue(e.target.value)
     }
 
-    const handleLogin = async (): Promise<void> => {
+    const handleLogin = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
+        e.preventDefault();  
         const req: Login = {
             email: emailValue,
             password: passwordValue
@@ -36,12 +39,21 @@ export default function InputForm() {
             },
             body: JSON.stringify(req)
         })
-            .then(res => res.json())
-            .then(json => {
-            console.log(json)
+        .then(res => {
+            return res.json();
         })
-            .catch(error => {
+        .then(json => {
+            console.log(json.status)
+            if (json.status >= 300) {
+                throw new Error('email, passwordに間違いがあります');
+            } else {
+                // ここでページ遷移
+                setErrorMessage('');
+            }
+        })
+        .catch(error => {
             console.error('client side error : ', error)
+            setErrorMessage(error.message);
         })
     }
 
@@ -49,7 +61,7 @@ export default function InputForm() {
         <div className="relative flex flex-col justify-center h-screen overflow-hidden">
         <div className="w-full p-6 m-auto bg-white rounded-md shadow-md ring-2 ring-gray-800/50 lg:max-w-lg">
             <h1 className="text-3xl font-semibold text-center text-gray-700">Login</h1>
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={(e) => handleLogin(e)}>
                 <div>
                     <label className="label">
                         <span className="text-base label-text">Email</span>
@@ -64,9 +76,11 @@ export default function InputForm() {
                     <input type="password" placeholder="Enter Password"
                         className="w-full input input-bordered" onChange={handlePasswordChange}/>
                 </div>
-                <a href="#" className="text-xs text-gray-600 hover:underline hover:text-blue-600">Forget Password?</a>
+                {/* <a href="#" className="text-xs text-gray-600 hover:underline hover:text-blue-600">Forget Password?</a> */}
+                {errorMessage && <p style={{ color: '#FF69B4' }}>{errorMessage}</p>}
                 <div>
-                    <button className="btn btn-block" onClick={handleLogin}>Login</button>
+                    {/* <button className="btn btn-block" onClick={handleLogin}>Login</button> */}
+                    <button className="btn btn-block">Login</button>
                 </div>
             </form>
         </div>
