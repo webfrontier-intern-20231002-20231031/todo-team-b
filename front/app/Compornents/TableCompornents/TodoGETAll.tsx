@@ -214,7 +214,7 @@ function TodoList() {
               <td>
                 <div className="p-2 font-bold">{todo.content}</div>
                 <div className="px-2">
-                  {todo.deadline ? new Date(todo.deadline).toLocaleString() : 'N/A'}
+                  {todo.deadline ? new Date(todo.deadline).toLocaleString() : ''}
                 </div>
                 <div className="px-2">
                   <div className="text-sm opacity-50">
@@ -260,7 +260,7 @@ function TodoList() {
                   />
                 </div>
               ) : (
-                <p>
+                <p className='px-2'>
                   {todos[selectedTodoIndex].content}
                 </p>
               )}
@@ -278,7 +278,7 @@ function TodoList() {
                   />
                 </div>
               ) : (
-                <p>
+                <p className='px-2'>
                   {/* @ts-ignore */}
                   {todos[selectedTodoIndex].deadline ? new Date(todos[selectedTodoIndex].deadline).toLocaleString() : 'N/A'}
                 </p>
@@ -291,9 +291,9 @@ function TodoList() {
                     className={`btn btn-ghost btn-xm ${
                       !todos[selectedTodoIndex].tags.some((t) => t.id === tag.id)
                         ? !selectedTagIds.includes(tag.id)
-                          ? ''
-                          : 'text-red-500'
-                        : 'text-red-500'
+                          ? 'text-red-300'
+                          : ''
+                        : ''
                     }`}
                     onClick={() => updateSelectedTagIds(tag.id)}
                   >
@@ -305,7 +305,7 @@ function TodoList() {
                 todos[selectedTodoIndex].tags.map((tag, tagIndex) => (
                   <span
                     key={tagIndex}
-                    className="btn btn-ghost btn-xs text-red-500"
+                    className="btn btn-ghost btn-xs"
                   >
                     {tag.name}
                   </span>
