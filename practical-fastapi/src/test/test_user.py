@@ -22,7 +22,6 @@ def temp_db(f):
 
 # ユーザ情報登録に関する処理
 @temp_db
-# Tagテーブル一覧のPOSTリクエスト正常処理テスト
 def test_create_user():
     response = client.post(
         "/v1/user",
@@ -45,3 +44,12 @@ def test_login():
     )
     assert response.status_code == 200
     assert response.json() == 1
+
+@temp_db
+def errortest_create_user():
+    response = client.post(
+        "/v1/user",
+        headers={"Content-Type": "application/json"},
+        json={},
+    )
+    assert response.status_code == 401
