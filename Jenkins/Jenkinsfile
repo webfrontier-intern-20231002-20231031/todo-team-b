@@ -23,7 +23,7 @@ pipeline {
         stage('Test') {
             agent {
                 docker {
-                    image 'tk210479/python-image:1.0'
+                    image 'tk210479/python-image:2.0'
                 }
             }
             steps {
