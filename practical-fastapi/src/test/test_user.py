@@ -3,6 +3,7 @@ from fastapi.testclient import TestClient
 from app.database import get_db
 from app.main import app
 
+
 client = TestClient(app)
 
 def temp_db(f):
@@ -22,7 +23,6 @@ def temp_db(f):
 
 # ユーザ情報登録に関する処理
 @temp_db
-# Tagテーブル一覧のPOSTリクエスト正常処理テスト
 def test_create_user():
     response = client.post(
         "/v1/user",
@@ -45,3 +45,30 @@ def test_login():
     )
     assert response.status_code == 200
     assert response.json() == 1
+
+@temp_db
+def test_wrongcreate_user():
+    response = client.post(
+        "/v1/user",
+        headers={"Content-Type": "application/json"},
+        json={"username": "Taro", "email": "taro_email@test.com", "password":"taro"},
+    )
+    assert response.status_code == 401
+
+@temp_db
+def test_wrongloginNoexist_user():
+    response = client.post(
+        "/v1/user/login",
+        headers={"Content-Type": "application/json"},
+        json={"email":"Kokusai", "password":"Kokusai"},
+    )
+    assert response.status_code == 401
+
+@temp_db
+def test_wrongloginPassword_user():
+    response = client.post(
+        "/v1/user/login",
+        headers={"Content-Type": "application/json"},
+        json={"email":"Taro", "password":"hanako"},
+    )
+    assert response.status_code == 401
