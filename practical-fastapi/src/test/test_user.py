@@ -3,6 +3,7 @@ from fastapi.testclient import TestClient
 from app.database import get_db
 from app.main import app
 
+
 client = TestClient(app)
 
 def temp_db(f):
@@ -46,10 +47,28 @@ def test_login():
     assert response.json() == 1
 
 @temp_db
-def errortest_create_user():
+def test_wrongcreate_user():
     response = client.post(
         "/v1/user",
         headers={"Content-Type": "application/json"},
-        json={},
+        json={"username": "Taro", "email": "taro_email@test.com", "password":"taro"},
+    )
+    assert response.status_code == 401
+
+@temp_db
+def test_wrongloginNoexist_user():
+    response = client.post(
+        "/v1/user/login",
+        headers={"Content-Type": "application/json"},
+        json={"email":"Kokusai", "password":"Kokusai"},
+    )
+    assert response.status_code == 401
+
+@temp_db
+def test_wrongloginPassword_user():
+    response = client.post(
+        "/v1/user/login",
+        headers={"Content-Type": "application/json"},
+        json={"email":"Taro", "password":"hanako"},
     )
     assert response.status_code == 401
