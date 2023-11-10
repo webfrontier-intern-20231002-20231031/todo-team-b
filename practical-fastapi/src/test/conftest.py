@@ -7,12 +7,14 @@ from app.database import Base
 from models.tag import TagModel
 from models.todo import TodoModel
 from models.todo_tag import TodoTagModel
-
+from models.user import UserModel
 
 ## ここではSQLiteを使ったユニットテストの共通部分を書く
 ## 関数毎で一時的にDatabaseを生成し、処理終了後に削除する
 @pytest.fixture(scope="function")
 def SessionLocal():
+    if database_exists("sqlite:///./test_temp.db"):
+        drop_database("sqlite:///./test_temp.db")
     TEST_SQLALCHEMY_DATABASE_URL = "sqlite:///./test_temp.db"
     engine = create_engine(
         TEST_SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
@@ -34,6 +36,10 @@ def SessionLocal():
     session.add(new_todo)
     new_todo = TodoModel(content="帰宅する")
     session.add(new_todo)
+    session.commit()
+
+    new_user = UserModel(username="Taro", email="taro_email@test.com", password="taro")
+    session.add(new_user)
     session.commit()
 
     # リレーションの作り方

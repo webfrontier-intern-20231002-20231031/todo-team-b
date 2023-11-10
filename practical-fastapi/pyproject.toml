@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "fastapi"
+name = "fastapi2"
 version = "0.1.0"
 description = "FastAPI Sample"
 authors = ["Kazuyuki Someya <kazuyukisomeya@gmail.com>"]

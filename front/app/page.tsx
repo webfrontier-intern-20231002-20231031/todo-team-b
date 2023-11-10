@@ -1,158 +1,114 @@
 'use client'
 import React, { useState, useEffect } from 'react';
-import { useRouter } from "next/navigation";
-import ReactPaginate from 'react-paginate';
 import Header from './Compornents/Header';
-
-interface Todo {
-  id: number;
-  content: string;
-  deadline: Date | null; // deadlineがnullの場合を考慮
-  completed: boolean;
-}
+import TodoList from './Compornents/TableCompornents//TodoGETAll';
 
 function Home() {
-  const [searchText, setSearchText] = useState('');
-  const [todos, setTodos] = useState<Todo[]>([]);
-  const [showCompleted, setShowCompleted] = useState(true);
-  const router = useRouter();
-
-  const fetchData = async () => {
-    try {
-      const response = await fetch('/api/TodoGETAll');
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      const data: Todo[] = await response.json();
-
-      // 取得したデータをコンポーネントの状態にセット
-      setTodos(data);
-    } catch (error) {
-      console.error('Error:', error);
-    }
-  }
-
-  // fetchDataをuseEffect内に移動して、コンポーネントがマウントされた時に実行
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const handleSearch = () => {
-    const filteredTodos = todos.filter((todo) =>
-      todo.content.toLowerCase().includes(searchText.toLowerCase())
-    );
-    setTodos(filteredTodos);
-  };
-
-  const handleTodoGETAll = () => {
-    fetchData();
-  };
-
-  // ソート機能の修正
-  const handleSort = () => {
-    const sortedTodos = [...todos].sort((a, b) => {
-        if (a.deadline === null && b.deadline === null) {
-            return 0;
-        } else if (a.deadline === null) {
-            return 1;
-        } else if (b.deadline === null) {
-            return -1;
-        } else {
-            const dateA = new Date(a.deadline);
-            const dateB = new Date(b.deadline);
-            return dateA.getTime() - dateB.getTime();
-        }
-    });
-    setTodos(sortedTodos);
-};
 
 
-
-
-  const handleShowCompleted = () => {
-    const completedTodos: Todo[] = todos.filter((todo) => todo.completed);
-    setTodos(completedTodos);
-    setShowCompleted(true);
-  };
-
-  const handleShowIncomplete = () => {
-    const incompleteTodos: Todo[] = todos.filter((todo) => !todo.completed);
-    setTodos(incompleteTodos);
-    setShowCompleted(false);
-  };
-
-  const handleCreate = () => {
-    router.push("/TodoPOST")
-  };
-
-  const handleDetail = (id: number) => {
-    // 対応するTodoを検索
-    const selectedTodo = todos.find((todo) => todo.id === id);
-    if (selectedTodo != null){
-      router.push(`/TodoGETById/${selectedTodo.id}`)
-    }
-  };
-
-  const handleComp = (id: number) => {
-    const updatedTodos = todos.map((todo) => {
-      if (todo.id === id) {
-        const updatedTodo = {
-          completed: !todo.completed,
-        };
-        console.log(updatedTodo);
-
-        fetch(`/api/TodoPUTCompleted/${id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(updatedTodo),
-          })
-        }
-      }
-    )
-    location.reload();
-  }
+//   const handleSearch = () => {
+//     const filteredTodos = todos.filter((todo) =>
+//       todo.content.toLowerCase().includes(searchText.toLowerCase())
+//     );
+//     setTodos(filteredTodos);
+//   };
   
-  const handleDelete = (id: number) => {
-    const deletedTodo = todos.find((todo) => todo.id === id);
 
-    if (deletedTodo) {
-        console.log(deletedTodo.id);
+//   const handleTodoGETAll = () => {
+//     fetchData();
+//   };
 
-        // fetch(`/api/TodoDELETE/${deletedTodo.id}`, {
-        //     method: 'DELETE',
-        // });
-        fetch(`/api/TodoDELETE/${deletedTodo.id}`, {
-          method: 'DELETE',
-      });
-    } else {
-        console.log(`ID ${id}のTodoは見つかりませんでした。`);
-    }
+//   // ソート機能の修正
+//   const handleSort = () => {
+//     const sortedTodos = [...todos].sort((a, b) => {
+//         if (a.deadline === null && b.deadline === null) {
+//             return 0;
+//         } else if (a.deadline === null) {
+//             return 1;
+//         } else if (b.deadline === null) {
+//             return -1;
+//         } else {
+//             const dateA = new Date(a.deadline);
+//             const dateB = new Date(b.deadline);
+//             return dateA.getTime() - dateB.getTime();
+//         }
+//     });
+//     setTodos(sortedTodos);
+// };
 
-  };
 
-  //paginate設定
-	// ページング用のステート
-	const [currentPage, setCurrentPage] = useState(0);
 
-	// 1ページあたりのアイテム数
-	const itemsPerPage = 10; 
 
-	// 現在のページのアイテムの範囲を計算
-	const offset = currentPage * itemsPerPage;
-	const currentPageData = todos.slice(offset, offset + itemsPerPage);
+//   const handleShowCompleted = () => {
+//     const completedTodos: Todo[] = todos.filter((todo) => todo.completed);
+//     setTodos(completedTodos);
+//     setShowCompleted(true);
+//   };
 
-	// ページが変更されたときのハンドラ
-	const handlePageClick = (selectedPage: { selected: number }) => {
-		setCurrentPage(selectedPage.selected);
-	};
+//   const handleShowIncomplete = () => {
+//     const incompleteTodos: Todo[] = todos.filter((todo) => !todo.completed);
+//     setTodos(incompleteTodos);
+//     setShowCompleted(false);
+//   };
+
+//   const handleCreate = () => {
+//     router.push("/TodoPOST")
+//   };
+
+//   const handleDetail = (id: number) => {
+//     // 対応するTodoを検索
+//     const selectedTodo = todos.find((todo) => todo.id === id);
+//     if (selectedTodo != null){
+//       router.push(`/TodoGETById/${selectedTodo.id}`)
+//     }
+//   };
+
+//   const handleComp = (id: number) => {
+//     const updatedTodos = todos.map((todo) => {
+//       if (todo.id === id) {
+//         const updatedTodo = {
+//           completed: !todo.completed,
+//         };
+//         console.log(updatedTodo);
+
+//         fetch(`/api/TodoPUTCompleted/${id}`, {
+//           method: 'PUT',
+//           headers: {
+//             'Content-Type': 'application/json',
+//           },
+//           body: JSON.stringify(updatedTodo),
+//           })
+//         }
+//       }
+//     )
+//     location.reload();
+//   }
+  
+//   const handleDelete = (id: number) => {
+//     const deletedTodo = todos.find((todo) => todo.id === id);
+
+//     if (deletedTodo) {
+//         console.log(deletedTodo.id);
+
+//         // fetch(`/api/TodoDELETE/${deletedTodo.id}`, {
+//         //     method: 'DELETE',
+//         // });
+//         fetch(`/api/TodoDELETE/${deletedTodo.id}`, {
+//           method: 'DELETE',
+//       });
+//     } else {
+//         console.log(`ID ${id}のTodoは見つかりませんでした。`);
+//     }
+
+//   };
 
   return (
 
     <main className="flex min-h-screen flex-col items-center">
-      <Header/>
-      <div className="flex items-center my-4">
+        <Header/>
+        <TodoList/>
+
+      {/* <div className="flex items-center my-4">
         <input
           type="text"
           placeholder="Todo検索"
@@ -231,7 +187,7 @@ function Home() {
           nextClassName='pageClass m-5'
 					activeClassName="active"
 				/>
-      </div>
+      </div> */}
     </main>
   );
 }
