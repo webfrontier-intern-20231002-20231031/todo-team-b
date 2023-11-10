@@ -197,3 +197,31 @@ Configrationの設定を行う
 
 ダッシュボードのBlueOceanから作成したpipelineを選択する
 初期だと`Run`ボタンが画面に出るため、`Run`を選択する
+
+### 自動テストの実装
+- ローカルホストを外部URLにする
+- github webhookを作成する
+- Jenkins側の設定を修正する
+
+#### ローカルホストを外部URLにする
+[ngrok設定の参考サイト](https://zenn.dev/tasada038/articles/fc7730f98d8f0a)に沿ってngrokを導入し、8080番ポートを外部に公開する
+
+```Terminal
+brew install ngrok/ngrok/ngrok
+ngrok config add-authtoken *********************
+ngrok http 8080
+```
+ngrok　httpを実行するとURLが払い出される
+
+#### github webhookを作成する
+git hubのリポジトリ->`Settings`->`Webhooks`->`Add webhook`を選択する
+Payload：`払い出されたURL/github-webhook/`を入力する
+Content type：`application/www-form-urlencoded`を選択する
+Which events would you like to trigger this webhook?：`Just the push event.`を選択する
+Active：チェックボタンを入れて、`Add webhook`を選択する
+
+#### Jenkins側の設定を修正する
+Jenkinsのダッシュボード画面から`General`->`GitHub hook trigger for GITScm polling`にチェックを入れる
+
+ここまでで対象のブランチへのpushで自動テストができるようになった。
+
