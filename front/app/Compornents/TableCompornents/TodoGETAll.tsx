@@ -13,14 +13,26 @@ interface Tags {
   name: string;
 }
 
+interface TodoUp {
+  content: string;
+  deadline: Date | null;
+  tags: Tags[];
+}
+
 function TodoList() {
   const [todos, setTodos] = useState<Todo[]>([]);
+  const [tags, setTags] = useState<Tags[]>([]);
   const [selectAll, setSelectAll] = useState(false);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [selectedTodoIndex, setSelectedTodoIndex] = useState(-1);
-  const [selectedTodoIds, setSelectedTodoIds] = useState<number[]>([]); // 選択されたTodoアイテムのIDを格納
+  const [selectedTodoIds, setSelectedTodoIds] = useState<number[]>([]);
+  const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
+  const [content, setContent] = useState<string>("");
+  const [date, setDate] = useState<string>("");
+  // const [time, setTime] = useState<string>("");
+  const [isUpdated, setIsUpdated] = useState(false);
 
-  const fetchData = async () => {
+  const fetchTodoData = async () => {
     try {
       const response = await fetch('/api/TodoGETAll');
       if (!response.ok) {
@@ -34,16 +46,38 @@ function TodoList() {
   }
 
   useEffect(() => {
-    fetchData();
+    fetchTodoData();
   }, []);
 
-  const toggleSelectAll = () => {
-    const updatedSelectAll = !selectAll;
-    setSelectAll(updatedSelectAll);
-    const updatedSelectedTodoIds = updatedSelectAll ? todos.map((todo) => todo.id) : [];
-    setSelectedTodoIds(updatedSelectedTodoIds);
+  const fetchTagData  = async () => {
+    try {
+      const response = await fetch('/api/TagGETAll');
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const tagData: Tags[] = await response.json();
+      setTags(tagData);
+    } catch (error) {
+      console.error('Error:', error);
+    }
   }
-  
+
+  useEffect(() => {
+    fetchTagData();
+  }, []);
+
+  const controllerInputChangeContent = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setContent(e.target.value);
+  };
+
+  const controllerInputChangeDate = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setDate(e.target.value);
+  }
+  // const controllerInputChangeTime = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setTime(e.target.value);
+  // }
+
+  const isAllSelected = selectedTodoIds.length === todos.length;
 
   const toggleTodoSelect = (id: number) => {
     if (selectedTodoIds.includes(id)) {
@@ -76,18 +110,68 @@ function TodoList() {
       console.error('Error:', error);
     }
   
-    // 選択状態をクリア
     setSelectedTodoIds([]);
   }
 
   const openDetailModal = (index: number) => {
     setSelectedTodoIndex(index);
     setIsDetailModalOpen(true);
+    setSelectedTagIds(todos[index].tags.map((tag) => tag.id)); // 初期状態でTodoに紐づいているタグを選択
   }
 
   const closeDetailModal = () => {
     setSelectedTodoIndex(-1);
+    setSelectedTagIds([]);
     setIsDetailModalOpen(false);
+    setIsUpdated(false);
+  }
+
+  const updateSelectedTagIds = (tagId: number) => {
+    if (selectedTagIds.includes(tagId)) {
+      setSelectedTagIds(selectedTagIds.filter((id) => id !== tagId));
+    } else {
+      setSelectedTagIds([...selectedTagIds, tagId]);
+    }
+  }
+
+  const handleUpdateTodo = async () => {
+    try {
+      // 選択したTodoのID
+      const selectedTodoId = todos[selectedTodoIndex].id;
+  
+      // PUTリクエストの送信先URL
+      const url = `/api/TodoPUTDetail/${selectedTodoId}`;
+  
+      // PUTリクエストのボディ
+      const requestBody: TodoUp = {
+        content: content !== "" ? content : todos[selectedTodoIndex].content,
+        deadline: date !== "" ? new Date(date) : todos[selectedTodoIndex].deadline,
+        tags: tags.filter(tag => selectedTagIds.includes(tag.id))
+      };
+  
+      // PUTリクエストの送信
+      const response = await fetch(url,{
+        cache: "no-store",
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
+      });
+  
+      if (response.ok) {
+        console.log(`Successfully updated Todo with ID ${selectedTodoId}`);
+      } else {
+        console.error(`Failed to update Todo with ID ${selectedTodoId}`);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  
+    setSelectedTagIds([]);
+    setIsDetailModalOpen(false);
+    setIsUpdated(false);
+    location.reload()
   }
 
   return (
@@ -101,8 +185,8 @@ function TodoList() {
                   id="checkAll"
                   type="checkbox"
                   className="checkbox"
-                  checked={selectAll}
-                  onChange={toggleSelectAll}
+                  checked={isAllSelected}
+                  onChange={() => setSelectedTodoIds(isAllSelected ? [] : todos.map(todo => todo.id))}
                 />
               </label>
             </th>
@@ -130,7 +214,7 @@ function TodoList() {
               <td>
                 <div className="p-2 font-bold">{todo.content}</div>
                 <div className="px-2">
-                  {todo.deadline ? new Date(todo.deadline).toLocaleString() : 'N/A'}
+                  {todo.deadline ? new Date(todo.deadline).toLocaleString() : ''}
                 </div>
                 <div className="px-2">
                   <div className="text-sm opacity-50">
@@ -154,29 +238,92 @@ function TodoList() {
           id="my_modal"
           className="modal"
           open={isDetailModalOpen}
-          onClick={closeDetailModal}
+          // onClick={closeDetailModal}
         >
           <div className="modal-box w-11/12 max-w-2xl" onClick={(e) => e.stopPropagation()}>
-            <h3 className="font-bold text-lg">Content</h3>
-            <p className="py-4">
-              {todos[selectedTodoIndex].content}
-              <br />
-              {/* @ts-ignore */}
-              {todos[selectedTodoIndex].deadline ? new Date(todos[selectedTodoIndex].deadline).toLocaleString() : 'N/A'}
-              <br />
-              {todos[selectedTodoIndex].tags.map((tag, tagIndex) => (
-                <span
-                  key={tagIndex}
-                  className={`btn btn-ghost btn-xs ${todos[selectedTodoIndex].tags.some((t) => t.id === tag.id) ? '' : 'text-opacity-50'}`}
-                >
-                  {tag.name}
-                </span>
-              ))}
-            </p>
+            <button 
+              className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+              onClick={closeDetailModal}
+            >✕
+            </button>
+            <h3 className="py-2 font-bold text-2xl">Content</h3>
+            <div className="modal-content">
+              {isUpdated ? (
+                <div>
+                  <p>Todo</p>
+                  <input
+                    type="text"
+                    placeholder={todos[selectedTodoIndex].content}
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                    className="input input-bordered w-full max-w-xs"
+                  />
+                </div>
+              ) : (
+                <p className='px-2'>
+                  {todos[selectedTodoIndex].content}
+                </p>
+              )}
+
+              {isUpdated ? (
+                <div>
+                  <p>Deadline</p>
+                  <input
+                    type="text"
+                    // @ts-ignore
+                    placeholder={todos[selectedTodoIndex].deadline ? new Date(todos[selectedTodoIndex].deadline).toLocaleString() : '20XX-XX-XX XX:XX:XX'}
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
+                    className="input input-bordered w-full max-w-xs"
+                  />
+                </div>
+              ) : (
+                <p className='px-2'>
+                  {/* @ts-ignore */}
+                  {todos[selectedTodoIndex].deadline ? new Date(todos[selectedTodoIndex].deadline).toLocaleString() : 'N/A'}
+                </p>
+              )}
+              <br/>
+              {isUpdated ? (
+                tags.map((tag, tagIndex) => (
+                  <span
+                    key={tagIndex}
+                    className={`btn btn-ghost btn-xm ${
+                      !todos[selectedTodoIndex].tags.some((t) => t.id === tag.id)
+                        ? !selectedTagIds.includes(tag.id)
+                          ? 'text-red-300'
+                          : ''
+                        : ''
+                    }`}
+                    onClick={() => updateSelectedTagIds(tag.id)}
+                  >
+                    {tag.name}
+                  </span>
+                ))
+                
+              ) : (
+                todos[selectedTodoIndex].tags.map((tag, tagIndex) => (
+                  <span
+                    key={tagIndex}
+                    className="btn btn-ghost btn-xs"
+                  >
+                    {tag.name}
+                  </span>
+                ))
+              )}
+            </div>
+            <br/>
+            <div className="text-center">
+              <button 
+                className={`btn ${isUpdated ? 'btn-success' : 'btn-primary'}`}
+                onClick={isUpdated ? handleUpdateTodo : () => setIsUpdated(true)}
+              >
+                {isUpdated ? 'Updated' : 'Change'}
+              </button>
+            </div>
           </div>
         </dialog>
       )}
-      
     </div>
   );
 }
