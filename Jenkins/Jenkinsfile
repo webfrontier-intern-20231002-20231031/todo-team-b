@@ -21,13 +21,13 @@ pipeline {
             }
             post {
                 success {
-                    slackSend (color: 'success', message: "ビルドに成功しました")
+                    slackSend (color: 'success', message: "Build Stage Succeeded: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
                 }
                 unstable {
-                    slackSend (color: 'warning', message: "ビルドが不安定です: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
+                    slackSend (color: 'warning', message: "Build Stage is Unstable: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
                 }
                 failure {
-                    slackSend (color: 'danger', message: "ビルドに失敗しました: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
+                    slackSend (color: 'danger', message: "Build Stage Failed: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
                 }
             }
         }
@@ -44,13 +44,13 @@ pipeline {
             }
             post {
                 success {
-                    slackSend (color: 'success', message: "テストに成功しました: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
+                    slackSend (color: 'success', message: "Test Stage Succeeded: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
                 }
                 unstable {
-                    slackSend (color: 'warning', message: "テストが不安定です: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
+                    slackSend (color: 'warning', message: "Test Stage is Unstable: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
                 }
                 failure {
-                    slackSend (color: 'danger', message: "テストに失敗しました: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
+                    slackSend (color: 'danger', message: "Test Stage Failed: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
                 }
             }
         }
