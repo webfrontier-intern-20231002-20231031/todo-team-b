@@ -22,8 +22,9 @@ pipeline {
         }
         stage('Test') {
             agent {
-                docker {
-                    image 'tk210479/python-image:2.1'
+                dockerfile {
+                    filename 'Dockerfile'
+                    args '--network=default'
                 }
             }
             steps {
