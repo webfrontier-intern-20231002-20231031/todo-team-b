@@ -36,5 +36,5 @@ next-env.d.ts
 
 
 # env file
-/app/api/Login/.env
-/app/api/.env
+app/api/Login/.env
+app/api/.env
