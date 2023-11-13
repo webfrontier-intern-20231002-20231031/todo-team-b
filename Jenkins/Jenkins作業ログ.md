@@ -95,6 +95,7 @@ docker logs jenkins-blueocean
 - Docker Pipeline
 - Blue Ocean
 
+
 ### pipelineでのテスト実施のためのdocker imageの作成とdocker hubへのpush
 テスト実施のためのdocker imageを作成する
 ```dockerfile
@@ -242,8 +243,173 @@ Jenkinsのダッシュボード画面から`General`->`GitHub hook trigger for G
 Jenkinsfileのagentでdockerfileを指定することで、そのアーキテクチャに合わせたdocker imageを作成することができるようにした
 別の手段としてbuildx buildでマルチアーキテクチャに対応したdocker imageを作成することを試したが、うまくいかなかったため上記のものを採用した
 
+また、Jenkinspfile内でDockerfileなどの別のファイルを参照する場合、Pathに注意する必要がある
+
+改良後のディレクトリ構造
+```bash
+Jenkins % tree
+.
+├── Dockerfile
+├── Jenkinsfile
+└── requirements.txt
+```
+
+Dockerfileを変更
+```Dockerfile
+FROM python:3.12.0-alpine3.18
+USER root
+
+RUN apk add --no-cache gcc musl-dev python3-dev libffi-dev openssl-dev sqlite-dev
+
+COPY Jenkins/requirements.txt .
+RUN pip install -r requirements.txt
+```
+
+Jenkinsfileでdockerfileを使えるようにしたもの
+```Jenkinsfile
+pipeline {
+    agent none
+    environment {
+        PROJECT_NAME="FastAPI+SQLArchemy Todo Sample"
+        API_V1_STR="/v1"
+        BACKEND_CORS_ORIGINS="localhost"
+        DATABASE_URL="sqlite:///todo.db"
+        LOGGING_CONF="./logging.json"
+    }
+    stages {
+        stage('Build') {
+            agent {
+                docker {
+                    image 'python:3.12.0-alpine3.18'
+                }
+            }
+            steps {
+                sh 'echo "Building the project"'
+                sh 'cd practical-fastapi/src/test; python -m py_compile conftest.py'
+                // stash(name: 'compiled-results', includes: 'practical-fast-api/src/test/*.py*')
+            }
+        }
+        stage('Test') {
+            agent {
+                dockerfile {
+                    filename 'Jenkins/Dockerfile'
+                    args '--network=default'
+                }
+            }
+            steps {
+                sh 'echo "Testing the project"'
+                sh 'cd practical-fastapi; pytest'
+            }
+        }
+    }
+}
+```
+
+requirement.txtの内容をテスト環境に必要なものだけにする
+```requierment.txt
+python-dotenv
+requests
+fastapi
+fastapi-route-logger-middleware
+sqlalchemy
+sqlalchemy-seeder
+pytest
+httpx
+sqlalchemy_utils
+```
+
 新たな問題点
 テストに対して時間がかかるようになってしまった。
 
 
-slacknotificationのインストール
+## Slackに通知を送る設定を行う
+
+
+### Slack側の設定
+[CloudBeesのサイト](https://cloudbees.techmatrix.jp/blog/struggle-story-about-ci-12/)を参考に作業を進める
+[slack api](https://api.slack.com/)->`Your App`->`create app`->`From Scratch`->AppName`hogehoge`,Workspace`fugafufa`でAppを作成
+権限は、`chat:write`のみを付与する
+`Install your app`でワークスペースに連れてくる
+ここで表示されるトークンをJenkinsと結びつける
+導入したいチャンネルのテキストメッセージ欄で`/invite ~~~`でappをチャンネルに参加させる
+(`/i`で「このチャンネルにアプリを参加させる」の予測変換が出てきたのでそれでもできた)
+
+
+### Jenkins側の設定
+ダッシュボード->`Jenkinsの管理`->`Plugins`->`slacknotification`のインストール
+ダッシュボード->`Jenkinsの管理`->`System`->`slack`で下記のように設定する
+
+- Workspace
+    - 自分がslack側の設定でappを連れてきたワークスペースの名前
+- credential
+    - `追加`->`jenkins`->`種類`->`secret text`から`secret`の部分にslackで表示されたトークンを入れる->`追加`押下
+    - 生成した`secret text`を選択する
+- Default channel
+    - appを参加させたチャンネルを入力する
+
+右下の`Test Connection`を押下し、`success`が出れば準備完了
+
+
+### Jenkinsfileを変更する
+```Jenkinsfile
+pipeline {
+    agent none
+    environment {
+        PROJECT_NAME="FastAPI+SQLArchemy Todo Sample"
+        API_V1_STR="/v1"
+        BACKEND_CORS_ORIGINS="localhost"
+        DATABASE_URL="sqlite:///todo.db"
+        LOGGING_CONF="./logging.json"
+    }
+    stages {
+        stage('Build') {
+            agent {
+                docker {
+                    image 'python:3.12.0-alpine3.18'
+                }
+            }
+            steps {
+                sh 'echo "Building the project"'
+                sh 'cd practical-fastapi/src/test; python -m py_compile conftest.py'
+                // stash(name: 'compiled-results', includes: 'practical-fast-api/src/test/*.py*')
+            }
+            post {
+                success {
+                    slackSend (color: '#00FF00', message: "Build Stage Succeeded")
+                }
+                unstable {
+                    slackSend (color: '#FFFF00', message: "Build Stage is Unstable: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
+                }
+                failure {
+                    slackSend (color: '#FF0000', message: "Build Stage Failed: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
+                }
+            }
+        }
+        stage('Test') {
+            agent {
+                dockerfile {
+                    filename 'Jenkins/Dockerfile'
+                    args '--network=default'
+                }
+            }
+            steps {
+                sh 'echo "Testing the project"'
+                sh 'cd practical-fastapi; pytest'
+            }
+            post {
+                success {
+                    slackSend (color: '#00FF00', message: "Test Stage Succeeded: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
+                }
+                unstable {
+                    slackSend (color: '#FFFF00', message: "Test Stage is Unstable: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
+                }
+                failure {
+                    slackSend (color: '#FF0000', message: "Test Stage Failed: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
+                }
+            }
+        }
+    }
+}
+```
+
+
