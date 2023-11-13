@@ -1,7 +1,17 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { auth_jwt } from '../../auth';
+
 export const fetchCache = 'default-no-store';
 
-export async function GET({ params }:{params: {id : string}})
+export async function GET(req: NextRequest ,{ params }:{params: {id : string}})
 {
+
+    // 認可機能
+    const res_auth = await auth_jwt(req)
+    if (!res_auth) {
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401});
+    }
+
   const id = params.id
 
   const headers = new Headers();

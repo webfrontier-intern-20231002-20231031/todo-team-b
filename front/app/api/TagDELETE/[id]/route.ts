@@ -1,7 +1,14 @@
-import { NextApiRequest } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
+import { auth_jwt } from '../../auth';
 
-export async function DELETE(req: NextApiRequest,
+export async function DELETE(req: NextRequest,
   { params }:{params: {id : string}}){
+
+  const res_auth = await auth_jwt(req)
+  if (!res_auth) {
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 401});
+  }
+
   const id = params.id
   // リクエストヘッダーにCORS関連の設定を追加
   const headers = new Headers();
