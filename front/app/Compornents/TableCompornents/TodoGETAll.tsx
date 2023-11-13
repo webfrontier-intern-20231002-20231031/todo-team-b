@@ -94,7 +94,7 @@ function TodoList() {
       let idsToDelete = selectedTodoIds;
   
       const updatedTodos = todos.filter((todo) => !idsToDelete.includes(todo.id));
-      setTodos(updatedTodos);
+      // setTodos(updatedTodos);
 
       for (const selectedId of idsToDelete) {
         const response = await fetch(`/api/TodoDELETE/${selectedId}`, {
@@ -111,6 +111,7 @@ function TodoList() {
     }
   
     setSelectedTodoIds([]);
+    fetchTodoData();
   }
 
   const openDetailModal = (index: number) => {
@@ -274,7 +275,7 @@ function TodoList() {
                     placeholder={todos[selectedTodoIndex].deadline ? new Date(todos[selectedTodoIndex].deadline).toLocaleString() : '20XX-XX-XX XX:XX:XX'}
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
-                    className="input input-bordered w-full max-w-xs"
+                    className="input input-bordered w-full "
                   />
                 </div>
               ) : (

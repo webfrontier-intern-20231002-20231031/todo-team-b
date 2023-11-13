@@ -1,3 +1,4 @@
+'use client'
 import React, { useState, useEffect } from 'react';
 
 interface TodoPOST {
@@ -23,6 +24,8 @@ export default function Header() {
   const [tags, setTags] = useState<Tags[]>([]);
   const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isTagModalOpen, setIsTagModalOpen] = useState<boolean>(false);
+  const [newTagName, setNewTagName] = useState<string>("");
 
   const fetchTagData  = async () => {
     try {
@@ -49,6 +52,15 @@ export default function Header() {
     setIsModalOpen(false);
   };
 
+  
+  const openTagModal = () => {
+    setIsTagModalOpen(true);
+  };
+
+  const closeTagModal = () => {
+    setIsTagModalOpen(false);
+  };
+
   const updateSelectedTagIds = (tagId: number) => {
     if (selectedTagIds.includes(tagId)) {
       setSelectedTagIds(selectedTagIds.filter((id) => id !== tagId));
@@ -61,7 +73,7 @@ export default function Header() {
     <span
       key={tagIndex}
       className={`btn btn-ghost btn-xm ${
-        selectedTagIds.includes(tag.id) ? 'text-red-300' : ''
+        selectedTagIds.includes(tag.id) ? 'text-red-500' : ''
       }`}
       onClick={() => updateSelectedTagIds(tag.id)}
     >
@@ -118,6 +130,65 @@ export default function Header() {
   }
 };
 
+const handleDELETETags = async (): Promise<void> => {
+  try {
+    for (const selectedId of selectedTagIds) {
+      const tagToDelete = tags.find((tag) => tag.id === selectedId);
+
+      if (tagToDelete) {
+        // タグが見つかった場合、APIを呼び出してタグを削除
+        const res = await fetch(`/api/TagDELETE/${selectedId}`, {
+          method: 'DELETE',
+        });
+
+        if (res.ok) {
+          
+        } else {
+          // タグの削除が失敗した場合
+          alert(`Failed to delete tag "${tagToDelete.name}".`);
+        }
+      } else {
+        // タグが見つからなかった場合
+        alert(`Tag with ID ${selectedId} not found.`);
+      }
+    }
+    setSelectedTagIds([]);
+    fetchTagData();
+    
+  } catch (error) {
+    console.error('Error:', error);
+  }
+};
+
+const handleCreateTag = async (): Promise<void> => {
+  try {
+    // 入力されたタグ名が空でないことを確認
+    if (newTagName.trim() === "") {
+      alert('Tag name cannot be empty.');
+      return;
+    }
+
+    const res = await fetch('/api/TagPOST', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name: newTagName }),
+    });
+
+    if (res.ok) {
+      fetchTagData();
+      setNewTagName("");
+    } else {
+      alert(`Failed to create tag "${newTagName}".`);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
+};
+
+
+
   return (
     <div className="sticky top-0 w-full z-10">
       <div className="drawer">
@@ -143,7 +214,7 @@ export default function Header() {
           <label htmlFor="my-drawer" aria-label="close sidebar" className="drawer-overlay"></label>
           <ul className="menu p-4 w-40 min-h-full bg-base-200 text-base-content">
             <li><label className='btn btn-ghost' onClick={openModal}>TodoPOST</label></li>
-            <li><a href="/Tags">Tags</a></li>
+            <li><label className='btn btn-ghost' onClick={openTagModal}>Tags</label></li>
           </ul>
         </div>
       </div>
@@ -183,7 +254,8 @@ export default function Header() {
                   className="input input-bordered w-full max-w-xs"
                 />
               </div>
-              {tagsContent}
+              {/* {tagsContent} */}
+              <br />
             </div>
             <div className="text-center">
               <button
@@ -194,8 +266,56 @@ export default function Header() {
               </button>
             </div>
           </div>
-          </dialog>
+        </dialog>
       )}
+        {/* New Tag Modal */}
+      {isTagModalOpen && (
+        <dialog
+          id="tag_modal"
+          className="modal"
+          open={isTagModalOpen}
+        >
+          <div className="modal-box">
+            {/* ... 他のコード */}
+            <button
+              className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+              onClick={closeTagModal}
+            >✕
+            </button>
+            <h3 className="py-2 font-bold text-2xl">Tag List</h3>
+            <div className="modal-content">
+              <div className='border border-neutral-500 border-2 rounded-lg '>
+                {tagsContent}
+              </div>
+              <div>
+                <br/>
+                <input
+                  type="text"
+                  placeholder="Tag Name"
+                  value={newTagName}
+                  onChange={(e) => setNewTagName(e.target.value)}
+                  className="input input-bordered input-primary w-full max-w-xm"
+                />
+              </div>
+              <div className="py-2 text-center">
+              <button
+                className="btn btn-primary text-white"
+                onClick={handleCreateTag}
+              >
+                Add
+              </button>
+              <button
+                className="btn bg-red-500 text-white"
+                onClick={handleDELETETags}
+              >
+                Delete
+              </button>
+              </div>
+            </div>
+          </div>
+        </dialog>
+      )}
+
     </div>
   );
 };
