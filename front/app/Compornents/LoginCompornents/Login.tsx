@@ -46,7 +46,7 @@ export default function InputForm() {
                 throw new Error('email, passwordに間違いがあります');
             } else {
                 setErrorMessage('');
-                router.push("https://3000--main--webapp--mz-akihiro.code.webfrontier.co.jp");
+                router.push("../../");
             }
         })
         .catch(error => {
