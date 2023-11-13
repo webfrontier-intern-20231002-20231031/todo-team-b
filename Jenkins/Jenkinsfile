@@ -46,7 +46,7 @@ pipeline {
                 success {
                     slackSend (color: 'success', message: "テストに成功しました: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
                 }
-                warning {
+                unstable {
                     slackSend (color: 'warning', message: "テストが不安定です: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
                 }
                 failure {
