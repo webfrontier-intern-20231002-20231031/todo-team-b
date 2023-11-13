@@ -244,3 +244,6 @@ Jenkinsfileのagentでdockerfileを指定することで、そのアーキテク
 
 新たな問題点
 テストに対して時間がかかるようになってしまった。
+
+
+slacknotificationのインストール
