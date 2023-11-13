@@ -147,8 +147,20 @@ def test_create_todo_error():
     )
     assert response.status_code == 422
 
+# 存在しないタグの選択
+@temp_db
+def test_error_update_todo():
+    response = client.put(
+        "/v1/todo/100",
+        json={"completed": True}
+    )
+    assert response.status_code == 404
+    response_check = client.get("/v1/todo/100")
+    assert response_check.status_code == 404
+
 # todo削除時に存在しないtodo idを指定した際にエラーになることを確認
 @temp_db
 def test_delete_todo_test():
     response = client.delete("/v1/todo/3")
     assert response.status_code == 200
+
