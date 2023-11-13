@@ -23,8 +23,8 @@ pipeline {
                 success {
                     slackSend (color: 'success', message: "ビルドに成功しました")
                 }
-                warning {
-                    slackSend (color: 'warning', message: "ビルドに警告があります")
+                unstable {
+                    slackSend (color: 'warning', message: "ビルドが不安定です: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
                 }
                 failure {
                     slackSend (color: 'danger', message: "ビルドに失敗しました: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
@@ -47,7 +47,7 @@ pipeline {
                     slackSend (color: 'success', message: "テストに成功しました: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
                 }
                 warning {
-                    slackSend (color: 'warning', message: "テストに警告があります: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
+                    slackSend (color: 'warning', message: "テストが不安定です: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
                 }
                 failure {
                     slackSend (color: 'danger', message: "テストに失敗しました: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
