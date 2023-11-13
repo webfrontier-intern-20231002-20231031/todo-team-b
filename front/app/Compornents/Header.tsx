@@ -3,11 +3,12 @@ import React, { useState, useEffect } from 'react';
 interface TodoPOST {
   content: string;
   deadline: Date | null;
+  tags: Tags[] | null
 }
 
-interface tagUp {
-  tags: Tags[]
-}
+// interface tagUp {
+//   tags: Tags[]
+// }
 
 interface Tags {
   id: number;
@@ -72,6 +73,7 @@ export default function Header() {
   const requestBody: TodoPOST = {
     content: content,
     deadline: date !== "" ? new Date(date) : null,
+    tags: tags.filter(tag => selectedTagIds.includes(tag.id)),
   };
 
   try {
