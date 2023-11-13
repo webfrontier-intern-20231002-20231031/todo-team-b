@@ -1,22 +1,30 @@
-# 実施日時　2023/11/08-2023/11/09
+# 実施日時　2023/11/08-2023/11/13
 
 ## 概要
 Jenkinsを利用して、pipelineを作成する際の作業ログであり、出来なかった部分や注意点についても記載する
 
 ## 実装範囲
-Jenkinsの構築->pipelineの作成->手動でのテスト実施
+Jenkinsの構築->pipelineの作成->手動でのテスト実施->github webhookでの自動化->リモートサーバへの環境移行->slackでの通知
 
 ## 検証環境
+#### ローカル環境
 mac
 - OS Sonoma 14.1
 - M1チップ
 - 16GBメモリ
 
+#### リモート環境
+Linux x64
+
+
 ## 作業内容
-Jenkinsの構築
-pipelineでのテスト実施のためのdocker imageの作成とdocker hubへのpush
-Jenkinsファイルの作成
-Jenkinsでのpipelineの作成
+- Jenkinsの構築
+- pipelineでのテスト実施のためのdocker imageの作成とdocker hubへのpush
+- Jenkinsファイルの作成
+- Jenkinsでのpipelineの作成
+- github webhookでの自動化
+- リモートサーバへの環境移行
+- slackでの通知
 
 ### 利用するもの
 - git
@@ -79,7 +87,9 @@ docker run --name jenkins-blueocean --detach \
 ```
 
 コンテナ作成後、Jenkinsの管理画面にアクセスする
+
 `http://localhost:8080/`をブラウザで開く
+
 管理者パスワードは、コンテナ作成時に表示されるログに記載されているためパスワードを取得する
 
 ```Terminal
@@ -87,10 +97,13 @@ docker logs jenkins-blueocean
 ```
 
 パスワード認証後、Jenkinsの初期設定を行う
+
 `Install suggested plugins`を選択する
+
 インストール終了後、ユーザ作成などが求められるため、設定を行う
 
 ユーザ作成終了後、dashboardに移動する
+
 追加のプラグインをインストールする
 - Docker Pipeline
 - Blue Ocean
@@ -118,6 +131,7 @@ docker imageを作成する
 docker build -t tk210479/python-image:1.0 .
 ```
 イメージ名はDockerHubのユーザ名/リポジトリ名:タグ名の形式で作成する
+
 もし先にイメージをビルドしてある場合には`docker tag`を利用してタグをつける
 
 DockrHubにログインする
@@ -176,13 +190,19 @@ pipeline {
 ### Jenkinsでのpipelineの作成
 
 ダッシュボードから`新規ジョブ作成`を選択する
+
 ジョブ名を決めて、パイプラインを選択する
+
 `OK`を選択する
 
 Configrationの設定を行う
+
 `General`タブから、`パイプライン`の`定義`を`Pipeline script from SCM`に変更する
+
 `SCM`の`Git`を選択する
+
 `リポジトリURL`にブラウザからのアクセスを可能にするために、`/todo-team-b/`までのURLを入力する
+
 `認証情報`に`追加`、`Jenkins`を選択する
 -  `ドメイン`に`グローバルドメイン`を入力する
 -  `種類`に`Username with password`を選択する
