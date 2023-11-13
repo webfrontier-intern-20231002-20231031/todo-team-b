@@ -16,7 +16,7 @@ pipeline {
             }
             steps {
                 sh 'echo "Building the project"'
-                sh 'cd practical-fastapi/src/test; python -m py_compile conftest.py test_tags.py test_user.py test_todos.py'
+                sh 'cd practical-fastapi/src/test; python -m py_compile conftest.py'
                 stash name: 'PythonTest'
             }
             // post {
