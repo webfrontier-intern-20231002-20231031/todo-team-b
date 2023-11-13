@@ -1,10 +1,12 @@
 "use client";
 
-import React, {useState, useEffect} from "react";
-import Router from 'next/router'
+import React, {useState} from "react";
+import { useRouter } from "next/navigation";
 
 
 export default function InputForm() {
+
+    const router = useRouter();
 
     type Login = {
         email: string;
@@ -40,15 +42,11 @@ export default function InputForm() {
             body: JSON.stringify(req)
         })
         .then(res => {
-            return res.json();
-        })
-        .then(json => {
-            console.log(json.status)
-            if (json.status >= 300) {
+            if(res.status >= 300){
                 throw new Error('email, passwordに間違いがあります');
             } else {
-                // ここでページ遷移
                 setErrorMessage('');
+                router.push("https://3000--main--webapp--mz-akihiro.code.webfrontier.co.jp");
             }
         })
         .catch(error => {
@@ -56,6 +54,7 @@ export default function InputForm() {
             setErrorMessage(error.message);
         })
     }
+
 
     return (
         <div className="relative flex flex-col justify-center h-screen overflow-hidden">

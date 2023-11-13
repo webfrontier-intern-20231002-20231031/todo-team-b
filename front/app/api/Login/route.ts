@@ -25,7 +25,6 @@ export async function POST(req: NextRequest) {
       return res.json();
   })
   .then(json => {
-    console.log("server side success : ", json)
     responseUserId = json
   })
   .catch(error => {
@@ -33,18 +32,27 @@ export async function POST(req: NextRequest) {
   })
   console.log(responseStatus)
 
-  const response = NextResponse.json({ status: responseStatus })
+  const response = NextResponse.json({},{ status: responseStatus })
 
   if (300 > responseStatus) {
-    const secretKey = 'your-secret-key';  // .envに書き込む
+    const secretKey = String(process.env.SECRET_KEY);
 
     const payload = {
       user_id: responseUserId
     };
 
-    const token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
+    const token = jwt.sign(payload, secretKey, { expiresIn: '10s' });
 
-    response.cookies.set('Set-Cookie', `token=${token}; HttpOnly; Path=/; Max-Age=${60 * 60}`);
+    response.cookies.set({
+      name: "auth-token",
+      value: token,
+      httpOnly: true,
+      path: "/",
+      maxAge: 60 * 60
+    })
   }
   return response
 }
+
+// 現状の問題
+// シークレットキーをenvに入れる
