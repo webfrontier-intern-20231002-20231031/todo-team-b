@@ -21,7 +21,7 @@ pipeline {
             }
             post {
                 success {
-                    slackSend (color: 'success', message: "Build Stage Succeeded: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
+                    slackSend (color: 'success', message: "Build Stage Succeeded")
                 }
                 unstable {
                     slackSend (color: 'warning', message: "Build Stage is Unstable: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
