@@ -3,13 +3,18 @@ import React, { useState, useEffect } from 'react';
 interface TodoPOST {
   content: string;
   deadline: Date | null;
-  tags: Tags[];
+}
+
+interface tagUp {
+  tags: Tags[]
 }
 
 interface Tags {
   id: number;
   name: string;
 }
+
+
 
 export default function Header() {
   const [content, setContent] = useState<string>("");
@@ -64,35 +69,52 @@ export default function Header() {
   ));
 
   const handleCreateTodo = async (): Promise<void> => {
-    
-
-    const requestBody: TodoPOST = {
-      content: content,
-      deadline: date !== "" ? new Date(date) : null,
-      tags: tags.filter(tag => selectedTagIds.includes(tag.id))
-    };
-    try {
-      const res = await fetch('/api/TodoPOST', {
-        cache: "no-store",
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestBody),
-      });
-
-      if (res.ok) {
-        alert('Todo created successfully!');
-        // ここで必要に応じて他の処理を追加
-      } else {
-        alert('Failed to create Todo.');
-      }
-
-      closeModal();
-    } catch (err) {
-      alert(err);
-    }
+  const requestBody: TodoPOST = {
+    content: content,
+    deadline: date !== "" ? new Date(date) : null,
   };
+
+  try {
+    // まずTodoをPOST
+    const res = await fetch('/api/TodoPOST', {
+      cache: "no-store",
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    });
+
+    if (res.ok) {
+      // Todoが正常に作成された場合
+      // const createdTodo = await res.json(); // 新しく作成されたTodoの情報を取得
+
+      // const tagAdd: tagUp = {
+      //   tags: tags.filter(tag => selectedTagIds.includes(tag.id)),
+      // };
+
+      // // Todoが作成された後にTagをPUT
+      // const tagRes = await fetch(`/api/TodoPUTTag/${createdTodo.id}`, {
+      //   cache: "no-store",
+      //   method: "PUT",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify(tagAdd),
+      // });
+
+      // if (tagRes.ok) {
+      alert('Todo created successfully!');
+      location.reload();
+    } else {
+      alert('Failed to create Todo.');
+    }
+
+    closeModal();
+  } catch (err) {
+    alert(err);
+  }
+};
 
   return (
     <div className="sticky top-0 w-full z-10">
