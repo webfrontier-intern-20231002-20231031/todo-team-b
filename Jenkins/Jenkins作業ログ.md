@@ -235,10 +235,15 @@ ngrok http 8080
 ngrok　httpを実行するとURLが払い出される
 
 #### github webhookを作成する
+
 git hubのリポジトリ->`Settings`->`Webhooks`->`Add webhook`を選択する
+
 Payload：`払い出されたURL/github-webhook/`を入力する
+
 Content type：`application/www-form-urlencoded`を選択する
+
 Which events would you like to trigger this webhook?：`Just the push event.`を選択する
+
 Active：チェックボタンを入れて、`Add webhook`を選択する
 
 #### Jenkins側の設定を修正する
@@ -248,6 +253,7 @@ Jenkinsのダッシュボード画面から`General`->`GitHub hook trigger for G
 
 ## リモートサーバでJenkinsを動かそうとした時の問題点と対応
 問題点
+
 リモートサーバでJenkinsを動かすときに、docker imageを作成するときにエラーが出て、pull後にcontainerが正常動作をしない
 
 行ってみた対応
@@ -256,11 +262,15 @@ Jenkinsのダッシュボード画面から`General`->`GitHub hook trigger for G
 両方ともうまくいかなかった
 
 原因
+
 ローカルとリモートでのOSのアーキテクチャの違い
+
 ローカルはarmであり、リモートはx64であるため、docker imageの作成時にエラーが出ていた
 
 解決方法
+
 Jenkinsfileのagentでdockerfileを指定することで、そのアーキテクチャに合わせたdocker imageを作成することができるようにした
+
 別の手段としてbuildx buildでマルチアーキテクチャに対応したdocker imageを作成することを試したが、うまくいかなかったため上記のものを採用した
 
 また、Jenkinspfile内でDockerfileなどの別のファイルを参照する場合、Pathに注意する必要がある
@@ -339,6 +349,7 @@ sqlalchemy_utils
 ```
 
 新たな問題点
+
 テストに対して時間がかかるようになってしまった。
 
 
@@ -347,16 +358,22 @@ sqlalchemy_utils
 
 ### Slack側の設定
 [CloudBeesのサイト](https://cloudbees.techmatrix.jp/blog/struggle-story-about-ci-12/)を参考に作業を進める
+
 [slack api](https://api.slack.com/)->`Your App`->`create app`->`From Scratch`->AppName`hogehoge`,Workspace`fugafufa`でAppを作成
 権限は、`chat:write`のみを付与する
+
 `Install your app`でワークスペースに連れてくる
+
 ここで表示されるトークンをJenkinsと結びつける
+
 導入したいチャンネルのテキストメッセージ欄で`/invite ~~~`でappをチャンネルに参加させる
+
 (`/i`で「このチャンネルにアプリを参加させる」の予測変換が出てきたのでそれでもできた)
 
 
 ### Jenkins側の設定
 ダッシュボード->`Jenkinsの管理`->`Plugins`->`slacknotification`のインストール
+
 ダッシュボード->`Jenkinsの管理`->`System`->`slack`で下記のように設定する
 
 - Workspace
@@ -431,5 +448,3 @@ pipeline {
     }
 }
 ```
-
-
