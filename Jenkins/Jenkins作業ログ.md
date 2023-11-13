@@ -236,7 +236,7 @@ Jenkinsのダッシュボード画面から`General`->`GitHub hook trigger for G
 
 原因
 ローカルとリモートでのOSのアーキテクチャの違い
-ローカルはM1チップであり、リモートはx86_64であるため、docker imageの作成時にエラーが出ていた
+ローカルはarmであり、リモートはx64であるため、docker imageの作成時にエラーが出ていた
 
 解決方法
 Jenkinsfileのagentでdockerfileを指定することで、そのアーキテクチャに合わせたdocker imageを作成することができるようにした
