@@ -19,6 +19,17 @@ pipeline {
                 sh 'cd practical-fastapi/src/test; python -m py_compile conftest.py'
                 // stash(name: 'compiled-results', includes: 'practical-fast-api/src/test/*.py*')
             }
+            post {
+                success {
+                    slackSend (color: 'success', message: "ビルドに成功しました")
+                }
+                warning {
+                    slackSend (color: 'warning', message: "ビルドに警告があります")
+                }
+                failure {
+                    slackSend (color: 'danger', message: "ビルドに失敗しました: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
+                }
+            }
         }
         stage('Test') {
             agent {
@@ -33,7 +44,13 @@ pipeline {
             }
             post {
                 success {
-                    slackSend (color: 'success', message: "Build Success: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
+                    slackSend (color: 'success', message: "テストに成功しました: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
+                }
+                warning {
+                    slackSend (color: 'warning', message: "テストに警告があります: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
+                }
+                failure {
+                    slackSend (color: 'danger', message: "テストに失敗しました: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
                 }
             }
         }
