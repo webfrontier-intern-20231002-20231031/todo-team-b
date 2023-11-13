@@ -41,14 +41,14 @@ export async function POST(req: NextRequest) {
       user_id: responseUserId
     };
 
-    const token = jwt.sign(payload, secretKey, { expiresIn: '10s' });
+    const token = jwt.sign(payload, secretKey, { expiresIn: '10h' });
 
     response.cookies.set({
       name: "auth-token",
       value: token,
       httpOnly: true,
       path: "/",
-      maxAge: 60 * 60
+      maxAge: 60 * 60 * 10
     })
   }
   return response
