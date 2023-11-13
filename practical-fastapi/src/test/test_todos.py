@@ -147,7 +147,7 @@ def test_create_todo_error():
     )
     assert response.status_code == 422
 
-# completedの変更をチェックします
+# 存在しないタグの選択
 @temp_db
 def test_error_update_todo():
     response = client.put(
