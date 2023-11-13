@@ -31,6 +31,11 @@ pipeline {
                 sh 'echo "Testing the project"'
                 sh 'cd practical-fastapi; pytest'
             }
+            post {
+                success {
+                    slackSend (color: 'success', message: "Build Success: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
+                }
+            }
         }
     }
 }
