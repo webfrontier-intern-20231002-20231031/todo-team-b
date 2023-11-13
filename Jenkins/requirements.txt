@@ -1,0 +1,9 @@
+python-dotenv
+requests
+fastapi
+fastapi-route-logger-middleware
+sqlalchemy
+sqlalchemy-seeder
+pytest
+httpx
+sqlalchemy_utils
