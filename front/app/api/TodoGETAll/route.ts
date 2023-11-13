@@ -1,7 +1,15 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { auth_jwt } from '../auth';
 
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+
+  // 認可機能
+  const res_auth = await auth_jwt(req)
+  if (!res_auth) {
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 401});
+  }
+
 // リクエストヘッダーにCORS関連の設定を追加
  const headers = new Headers();
  headers.append('Access-Control-Allow-Origin', '*'); 

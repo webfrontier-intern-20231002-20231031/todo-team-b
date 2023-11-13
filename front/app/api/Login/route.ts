@@ -1,33 +1,58 @@
 import { NextRequest, NextResponse } from 'next/server';
+import jwt from 'jsonwebtoken';
 
+export async function POST(req: NextRequest) {
 
-export async function POST(req: Request) {
+  console.log("<<< test >>>")
+  const body = await req.text();
+  console.log(body);
+  const res_js = await JSON.parse(body)
+  console.log(res_js.email)
 
-    console.log("<<< test >>>")
-    const body = await req.text();
-    console.log(body);
-    const res_js = await JSON.parse(body)
-    console.log(res_js.email)
+  const headers = new Headers();
+  headers.append("Content-Type", "application/json");
 
-    const headers = new Headers();
-    headers.append("Content-Type", "application/json");
+  let responseStatus
+  let responseUserId
 
-    let responseStatus
-    await fetch('http://localhost:8000/v1/user/login', {
-        method: 'POST',
-        body: JSON.stringify(res_js),
-        headers: headers,
+  await fetch('http://localhost:8000/v1/user/login', {
+      method: 'POST',
+      body: JSON.stringify(res_js),
+      headers: headers,
+  })
+  .then(res => {
+      responseStatus = res.status;
+      return res.json();
+  })
+  .then(json => {
+    responseUserId = json
+  })
+  .catch(error => {
+    console.error('server side error : ', error)
+  })
+  console.log(responseStatus)
+
+  const response = NextResponse.json({},{ status: responseStatus })
+
+  if (300 > responseStatus) {
+    const secretKey = String(process.env.SECRET_KEY);
+
+    const payload = {
+      user_id: responseUserId
+    };
+
+    const token = jwt.sign(payload, secretKey, { expiresIn: '10s' });
+
+    response.cookies.set({
+      name: "auth-token",
+      value: token,
+      httpOnly: true,
+      path: "/",
+      maxAge: 60 * 60
     })
-    .then(res => {
-        responseStatus = res.status;
-        return res.json();
-    })
-    .then(json => {
-      console.log("server side success : ", json)
-    })
-    .catch(error => {
-      console.error('server side error : ', error)
-    })
-    console.log(responseStatus)
-    return NextResponse.json({ status: responseStatus });
+  }
+  return response
 }
+
+// 現状の問題
+// シークレットキーをenvに入れる
