@@ -1,12 +1,21 @@
-export async function PUT(req: Request){
+import { NextRequest, NextResponse } from 'next/server';
+import { auth_jwt } from '../auth';
+
+export async function PUT(req: NextRequest){
+
+  const res_auth = await auth_jwt(req)
+  if (!res_auth) {
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 401});
+  }
+
     // リクエストヘッダーにCORS関連の設定を追加
     const headers = new Headers();
     headers.append('Access-Control-Allow-Origin', '*'); 
     headers.append("Content-Type", "application/json");
   
-    const Up= await req.json();
-  
-    console.log(Up)
+    const body = await req.text();
+    const Up = await JSON.parse(body)
+    console.log(Up);
     let url = `http://127.0.0.1:8000/v1/todo/`;
   
     const res = await fetch(url, {
