@@ -1,7 +1,7 @@
 # 実施日時　2023/11/08-2023/11/09
 
 ## 実装範囲
-Jenkinsの構築->pipelineの作成->手動でのテスト実施
+Jenkinsの構築->pipelineの作成->手動でのテスト実施->テスト自動化
 ## 検証環境
 mac
 - OS Sonoma 14.1
@@ -149,12 +149,17 @@ ngrok　httpを実行するとURLが払い出される
 
 #### github webhookを作成する
 git hubのリポジトリ->`Settings`->`Webhooks`->`Add webhook`を選択する
+
 Payload：`払い出されたURL/github-webhook/`を入力する
+
 Content type：`application/www-form-urlencoded`を選択する
+
 Which events would you like to trigger this webhook?：`Just the push event.`を選択する
+
 Active：チェックボタンを入れて、`Add webhook`を選択する
 
 #### Jenkins側の設定を修正する
+
 Jenkinsのダッシュボード画面から`General`->`GitHub hook trigger for GITScm polling`にチェックを入れる
 
 ここまでで対象のブランチへのpushで自動テストができるようになった。
