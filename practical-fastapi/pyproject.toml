@@ -25,9 +25,3 @@ sqlalchemy-seeder = "^0.3.0"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-
-[pytest]
-markers =
-    run_these_tag: Mark a test to run with the 'run_these_tag' marker
-    run_these_todo: Mark a test to run with the 'run_these_todo' marker
-    run_these_todoError_and_user: Mark a test to run with the 'run_these_todoError_and_user' marker
