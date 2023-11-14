@@ -9,6 +9,11 @@ pipeline {
     }
     stages {
         stage('Build') {
+            agent {
+                docker {
+                    image 'python:3.12.0-alpine3.18'
+                }
+            }
             steps {
                 sh 'echo "Building the project"'
                 sh 'cd practical-fastapi/src/test; python -m py_compile conftest.py'
