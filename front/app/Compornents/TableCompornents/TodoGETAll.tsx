@@ -246,7 +246,7 @@ function TodoList() {
           <option value="Limit">Deadline</option>
         </select>
       </div>
-      <table className="w-full table">
+      <table className="w-full table border-blue-600">
         <thead>
           <tr>
             <th>
@@ -254,7 +254,7 @@ function TodoList() {
                 <input
                   id="checkAll"
                   type="checkbox"
-                  className="checkbox"
+                  className="checkbox checkbox-error border-2"
                   checked={isAllSelected}
                   onChange={() => setSelectedTodoIds(isAllSelected ? [] : todos.map(todo => todo.id))}
                 />
@@ -275,7 +275,7 @@ function TodoList() {
                 <label>
                   <input
                     type="checkbox"
-                    className="checkbox"
+                    className="checkbox checkbox-error border-2"
                     checked={selectedTodoIds.includes(todo.id)}
                     onChange={() => toggleTodoSelect(todo.id)}
                   />
