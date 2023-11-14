@@ -3,9 +3,12 @@ from fastapi.testclient import TestClient
 from app.database import get_db
 from app.main import app
 
+import pytest
+
 
 client = TestClient(app)
 
+@pytest.mark.run_these_todoError_and_user
 def temp_db(f):
     def func(SessionLocal, *args, **kwargs):
         def override_get_db():
@@ -21,6 +24,7 @@ def temp_db(f):
 
     return func
 
+@pytest.mark.run_these_todoError_and_user
 # ユーザ情報登録に関する処理
 @temp_db
 def test_create_user():
@@ -34,7 +38,7 @@ def test_create_user():
     assert json_body is None
 
 
-
+@pytest.mark.run_these_todoError_and_user
 # ログイン処理
 @temp_db
 def test_login():
@@ -46,6 +50,7 @@ def test_login():
     assert response.status_code == 200
     assert response.json() == 1
 
+@pytest.mark.run_these_todoError_and_user
 @temp_db
 def test_wrongcreate_user():
     response = client.post(
@@ -55,6 +60,7 @@ def test_wrongcreate_user():
     )
     assert response.status_code == 401
 
+@pytest.mark.run_these_todoError_and_user
 @temp_db
 def test_wrongloginNoexist_user():
     response = client.post(
@@ -64,6 +70,7 @@ def test_wrongloginNoexist_user():
     )
     assert response.status_code == 401
 
+@pytest.mark.run_these_todoError_and_user
 @temp_db
 def test_wrongloginPassword_user():
     response = client.post(

@@ -3,10 +3,14 @@ from fastapi.testclient import TestClient
 from app.database import get_db
 from app.main import app
 
+import pytest
+
+
 client = TestClient(app)
 
 
 # 呼び出されるたびにデータベースを作成するデコレータ
+@pytest.mark.run_these_tag
 def temp_db(f):
     # conftest.py内部のSessionLocal関数の処理内容でデータベースは対象関数実行後削除
     def func(SessionLocal, *args, **kwargs):
@@ -24,6 +28,7 @@ def temp_db(f):
     return func
 
 
+@pytest.mark.run_these_tag
 @temp_db
 # Tagテーブル一覧のPOSTリクエスト正常処理テスト
 def test_create_tag():
@@ -36,6 +41,7 @@ def test_create_tag():
     assert response.json() == {"id": 3, "name": "CreateTest", "todos": []}
 
 
+@pytest.mark.run_these_tag
 @temp_db
 # Tagテーブル一覧のGETリクエスト正常処理テスト
 def test_read_tag_all():
@@ -47,6 +53,7 @@ def test_read_tag_all():
     assert json_body[1]["name"] == "カフェオレを作る"
 
 
+@pytest.mark.run_these_tag
 @temp_db
 def test_read_tag_all_todo():
     response = client.get("/v1/tag/")
@@ -56,6 +63,7 @@ def test_read_tag_all_todo():
     assert json_body[1]["todos"][0]["content"] == "買い物する"
 
 
+@pytest.mark.run_these_tag
 @temp_db
 # id指定のTagテーブルへのGETリクエスト正常処理テスト
 def test_read_tag_by_id():
@@ -65,6 +73,7 @@ def test_read_tag_by_id():
     json_body = response.json()
     assert json_body["name"] == "コーヒーを買う"
 
+@pytest.mark.run_these_tag
 @temp_db
 def test_read_tag_by_id_todo():
     response = client.get("/v1/tag/1")
@@ -73,6 +82,7 @@ def test_read_tag_by_id_todo():
     assert json_body["todos"][0]["id"] == 1
 
 
+@pytest.mark.run_these_tag
 @temp_db
 # id指定のTagテーブルへのPUTリクエスト正常処理テスト
 def test_update_tag_by_id():
@@ -84,6 +94,7 @@ def test_update_tag_by_id():
     assert response.status_code == 200
 
 
+@pytest.mark.run_these_tag
 @temp_db
 # id指定のTagテーブルへのDELETEリクエスト正常処理テスト
 def test_delete_tag():

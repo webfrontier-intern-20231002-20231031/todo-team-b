@@ -448,3 +448,140 @@ pipeline {
     }
 }
 ```
+
+## テスト時間の短縮を図る
+
+### 概要
+「Jenkinsfileのagentでdockerfileを指定することで、そのアーキテクチャに合わせたdocker imageを作成することができるようにした」ことによって「テストの処理時間が伸びる」という問題点が発生したためその対応を行う
+
+### 対応方法
+1. stash関数を利用し、buildステージで生成したcacheを元にtestステージでテストを行う
+2. Jenkinsの並列実行を行うことで、テスト時間の短縮を図る
+3. pytestのオプションを利用して、テストを分割する
+
+
+
+1〜3を踏まえて、Jenkinsfileを変更する
+```Jenkinsfile
+pipeline {
+    agent none
+    environment {
+        PROJECT_NAME="FastAPI+SQLArchemy Todo Sample"
+        API_V1_STR="/v1"
+        BACKEND_CORS_ORIGINS="localhost"
+        DATABASE_URL="sqlite:///todo.db"
+        LOGGING_CONF="./logging.json"
+    }
+    stages {
+        stage('Build') {
+            agent {
+                docker {
+                    image 'python:3.12.0-alpine3.18'
+                }
+            }
+            steps {
+                sh 'echo "Building the project"'
+                sh 'cd practical-fastapi/src/test; python -m py_compile conftest.py'
+                //stash name: 'PythonTest'
+                stash includes: 'practical-fastapi/src/test/__pycache__/*', name: 'PythonTest'
+            }
+            post {
+                success {
+                    slackSend (color: '#00FF00', message: "Build Stage Succeeded")
+                }
+                unstable {
+                    slackSend (color: '#FFFF00', message: "Build Stage is Unstable: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
+                }
+                failure {
+                    slackSend (color: '#FF0000', message: "Build Stage Failed: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
+                }
+            }
+        }
+        stage('Test') {
+            parallel{
+                stage("TagsAllTest") {
+                    agent {
+                        dockerfile {
+                            filename 'Jenkins/Dockerfile'
+                            args '--network=default'
+                        }
+                    }
+                    steps {
+                        sh 'echo "Testing the project"'
+                        unstash 'PythonTest'
+                        //sh 'cd practical-fastapi; pytest'
+                        sh 'cd practical-fastapi; pytest -v -m run_these_tag'
+                    }
+                }
+                stage("TodoNormalTest") {
+                    agent {
+                        dockerfile {
+                            filename 'Jenkins/Dockerfile'
+                            args '--network=default'
+                        }
+                    }
+                    steps {
+                        sh 'echo "Testing the project"'
+                        unstash 'PythonTest'
+                        //sh 'cd practical-fastapi; pytest'
+                        sh 'cd practical-fastapi; pytest -v -m run_these_todo'
+                    }
+                }
+                stage("TodoErrorAndUserAllTest") {
+                    agent {
+                        dockerfile {
+                            filename 'Jenkins/Dockerfile'
+                            args '--network=default'
+                        }
+                    }
+                    steps {
+                        sh 'echo "Testing the project"'
+                        unstash 'PythonTest'
+                        //sh 'cd practical-fastapi; pytest'
+                        sh 'cd practical-fastapi; pytest -v -m run_these_todoError_and_user'
+                    }
+                }
+            }
+            post {
+                success {
+                    slackSend (color: '#00FF00', message: "Test Stage Succeeded: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
+                }
+                unstable {
+                    slackSend (color: '#FFFF00', message: "Test Stage is Unstable: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
+                }
+                failure {
+                    slackSend (color: '#FF0000', message: "Test Stage Failed: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
+                }
+            }
+        }
+    }
+}
+```
+
+3を踏まえて、pytest.iniを作成する
+
+pytestのオプションでデコレータで分割したテストを実行するために作成
+
+ディレクトリ構造（markdownなどは省いている）
+
+基本的にはpytestを実行するディレクトリにpytest.iniを配置する
+```bash
+practical-fastapi % tree -L 1
+.
+├── logging.json
+├── pytest.ini
+├── src
+└── tool
+```
+
+```pythhon:pytest.ini
+[pytest]
+markers =
+    run_these_tag: Mark a test to run with the 'run_these_tag' marker
+    run_these_todo: Mark a test to run with the 'run_these_todo' marker
+    run_these_todoError_and_user: Mark a test to run with the 'run_these_todoError_and_user' marker
+```
+
+上記のpytest.iniを作成することで、pytestのオプションを利用してテストを分割する
+
+テスト分割は/practical-fastapi/src/testを参照

@@ -17,7 +17,8 @@ pipeline {
             steps {
                 sh 'echo "Building the project"'
                 sh 'cd practical-fastapi/src/test; python -m py_compile conftest.py'
-                // stash(name: 'compiled-results', includes: 'practical-fast-api/src/test/*.py*')
+                //stash name: 'PythonTest'
+                stash includes: 'practical-fastapi/src/test/__pycache__/*', name: 'PythonTest'
             }
             post {
                 success {
@@ -32,15 +33,49 @@ pipeline {
             }
         }
         stage('Test') {
-            agent {
-                dockerfile {
-                    filename 'Jenkins/Dockerfile'
-                    args '--network=default'
+            parallel{
+                stage("TagsAllTest") {
+                    agent {
+                        dockerfile {
+                            filename 'Jenkins/Dockerfile'
+                            args '--network=default'
+                        }
+                    }
+                    steps {
+                        sh 'echo "Testing the project"'
+                        unstash 'PythonTest'
+                        //sh 'cd practical-fastapi; pytest'
+                        sh 'cd practical-fastapi; pytest -v -m run_these_tag'
+                    }
                 }
-            }
-            steps {
-                sh 'echo "Testing the project"'
-                sh 'cd practical-fastapi; pytest'
+                stage("TodoNormalTest") {
+                    agent {
+                        dockerfile {
+                            filename 'Jenkins/Dockerfile'
+                            args '--network=default'
+                        }
+                    }
+                    steps {
+                        sh 'echo "Testing the project"'
+                        unstash 'PythonTest'
+                        //sh 'cd practical-fastapi; pytest'
+                        sh 'cd practical-fastapi; pytest -v -m run_these_todo'
+                    }
+                }
+                stage("TodoErrorAndUserAllTest") {
+                    agent {
+                        dockerfile {
+                            filename 'Jenkins/Dockerfile'
+                            args '--network=default'
+                        }
+                    }
+                    steps {
+                        sh 'echo "Testing the project"'
+                        unstash 'PythonTest'
+                        //sh 'cd practical-fastapi; pytest'
+                        sh 'cd practical-fastapi; pytest -v -m run_these_todoError_and_user'
+                    }
+                }
             }
             post {
                 success {
