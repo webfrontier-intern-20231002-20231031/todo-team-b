@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
       value: token,
       httpOnly: true,
       path: "/",
-      maxAge: 60 * 60 * 10
+      maxAge: 60 * 60 * 10       // ブラウザ上では世界標準時間で表示されるので注意(ちゃんと指定した時間分消えないので大丈夫)
     })
   }
   return response
