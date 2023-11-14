@@ -16,6 +16,9 @@ mac
 - M1チップ
 - 16GBメモリ
 
+docker
+- version 24.0.5
+
 #### リモート環境
 Linux x64
 
