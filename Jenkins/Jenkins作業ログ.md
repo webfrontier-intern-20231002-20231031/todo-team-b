@@ -448,3 +448,110 @@ pipeline {
     }
 }
 ```
+
+## テスト時間の短縮を図る
+
+### 概要
+「Jenkinsfileのagentでdockerfileを指定することで、そのアーキテクチャに合わせたdocker imageを作成することができるようにした」ことによって「テストの処理時間が伸びる」という問題点が発生したためその対応を行う
+
+### 対応方法
+stash関数を利用し、buildステージで生成したcacheを元にtestステージでテストを行う
+Jenkinsの並列実行を行うことで、テスト時間の短縮を図る
+
+Jenkinsfileを変更する
+```Jenkinsfile
+pipeline {
+    agent none
+    environment {
+        PROJECT_NAME="FastAPI+SQLArchemy Todo Sample"
+        API_V1_STR="/v1"
+        BACKEND_CORS_ORIGINS="localhost"
+        DATABASE_URL="sqlite:///todo.db"
+        LOGGING_CONF="./logging.json"
+    }
+    stages {
+        stage('Build') {
+            agent {
+                docker {
+                    image 'python:3.12.0-alpine3.18'
+                }
+            }
+            steps {
+                sh 'echo "Building the project"'
+                sh 'cd practical-fastapi/src/test; python -m py_compile conftest.py'
+                //stash name: 'PythonTest'
+                stash includes: 'practical-fastapi/src/test/__pycache__/*', name: 'PythonTest'
+            }
+            post {
+                success {
+                    slackSend (color: '#00FF00', message: "Build Stage Succeeded")
+                }
+                unstable {
+                    slackSend (color: '#FFFF00', message: "Build Stage is Unstable: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
+                }
+                failure {
+                    slackSend (color: '#FF0000', message: "Build Stage Failed: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
+                }
+            }
+        }
+        stage('Test') {
+            parallel{
+                stage("TagsAllTest") {
+                    agent {
+                        dockerfile {
+                            filename 'Jenkins/Dockerfile'
+                            args '--network=default'
+                        }
+                    }
+                    steps {
+                        sh 'echo "Testing the project"'
+                        unstash 'PythonTest'
+                        //sh 'cd practical-fastapi; pytest'
+                        sh 'cd practical-fastapi; pytest -v -m run_these_tag'
+                    }
+                }
+                stage("TodoNormalTest") {
+                    agent {
+                        dockerfile {
+                            filename 'Jenkins/Dockerfile'
+                            args '--network=default'
+                        }
+                    }
+                    steps {
+                        sh 'echo "Testing the project"'
+                        unstash 'PythonTest'
+                        //sh 'cd practical-fastapi; pytest'
+                        sh 'cd practical-fastapi; pytest -v -m run_these_todo'
+                    }
+                }
+                stage("TodoErrorAndUserAllTest") {
+                    agent {
+                        dockerfile {
+                            filename 'Jenkins/Dockerfile'
+                            args '--network=default'
+                        }
+                    }
+                    steps {
+                        sh 'echo "Testing the project"'
+                        unstash 'PythonTest'
+                        //sh 'cd practical-fastapi; pytest'
+                        sh 'cd practical-fastapi; pytest -v -m run_these_todoError_and_user'
+                    }
+                }
+            }
+            post {
+                success {
+                    slackSend (color: '#00FF00', message: "Test Stage Succeeded: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
+                }
+                unstable {
+                    slackSend (color: '#FFFF00', message: "Test Stage is Unstable: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
+                }
+                failure {
+                    slackSend (color: '#FF0000', message: "Test Stage Failed: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
+                }
+            }
+        }
+    }
+}
+```
+
