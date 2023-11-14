@@ -32,13 +32,13 @@ pipeline {
             //     }
             // }
         }
-        agent {
-            dockerfile {
-                filename 'Jenkins/Dockerfile'
-                args '--network=default'
-            }
-        }
         stage('Test') {
+            agent {
+                dockerfile {
+                    filename 'Jenkins/Dockerfile'
+                    args '--network=default'
+                }
+            }
             parallel{
                 stage("TagsAllTest") {
                     steps {
