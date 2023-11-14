@@ -463,8 +463,6 @@ pipeline {
 2. Jenkinsの並列実行を行うことで、テスト時間の短縮を図る
 3. pytestのオプションを利用して、テストを分割する
 
-
-
 1〜3を踏まえて、Jenkinsfileを変更する
 ```Jenkinsfile
 pipeline {
