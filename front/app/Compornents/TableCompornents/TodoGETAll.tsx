@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import { useRouter } from "next/navigation";
 interface Todo {
   id: number;
   content: string;
@@ -32,9 +32,15 @@ function TodoList() {
   // const [time, setTime] = useState<string>("");
   const [isUpdated, setIsUpdated] = useState(false);
 
+  const router = useRouter();
+
   const fetchTodoData = async () => {
     try {
       const response = await fetch('/api/TodoGETAll');
+      if (response.status === 401) {
+        router.push("../Login/");
+        return
+      }
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
@@ -52,6 +58,10 @@ function TodoList() {
   const fetchTagData  = async () => {
     try {
       const response = await fetch('/api/TagGETAll');
+      if (response.status === 401) {
+        router.push("../Login/");
+        return
+      }
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
@@ -100,6 +110,10 @@ function TodoList() {
         const response = await fetch(`/api/TodoDELETE/${selectedId}`, {
           method: 'DELETE',
         });
+        if (response.status === 401) {
+          router.push("../Login/");
+          return
+        }
         if (response.ok) {
           console.log(`Successfully deleted Todo with ID ${selectedId}`);
         } else {
@@ -159,7 +173,11 @@ function TodoList() {
         },
         body: JSON.stringify(requestBody),
       });
-  
+
+      if (response.status === 401) {
+        router.push("../Login/");
+        return
+      }
       if (response.ok) {
         console.log(`Successfully updated Todo with ID ${selectedTodoId}`);
       } else {
