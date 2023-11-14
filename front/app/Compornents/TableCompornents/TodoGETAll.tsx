@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-
+import { useRouter } from "next/navigation";
 interface Todo {
   id: number;
   content: string;
   deadline: Date | null;
   completed: boolean;
+  updatedAt: Date;
   tags: Tags[];
 }
 
@@ -29,12 +30,19 @@ function TodoList() {
   const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
   const [content, setContent] = useState<string>("");
   const [date, setDate] = useState<string>("");
-  // const [time, setTime] = useState<string>("");
+  const [searchText, setSearchText] = useState<string>("");
   const [isUpdated, setIsUpdated] = useState(false);
+  const [sortOption, setSortOption] = useState("Update");
+
+  const router = useRouter();
 
   const fetchTodoData = async () => {
     try {
       const response = await fetch('/api/TodoGETAll');
+      if (response.status === 401) {
+        router.push("../Login/");
+        return
+      }
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
@@ -52,6 +60,10 @@ function TodoList() {
   const fetchTagData  = async () => {
     try {
       const response = await fetch('/api/TagGETAll');
+      if (response.status === 401) {
+        router.push("../Login/");
+        return
+      }
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
@@ -100,6 +112,10 @@ function TodoList() {
         const response = await fetch(`/api/TodoDELETE/${selectedId}`, {
           method: 'DELETE',
         });
+        if (response.status === 401) {
+          router.push("../Login/");
+          return
+        }
         if (response.ok) {
           console.log(`Successfully deleted Todo with ID ${selectedId}`);
         } else {
@@ -159,7 +175,11 @@ function TodoList() {
         },
         body: JSON.stringify(requestBody),
       });
-  
+
+      if (response.status === 401) {
+        router.push("../Login/");
+        return
+      }
       if (response.ok) {
         console.log(`Successfully updated Todo with ID ${selectedTodoId}`);
       } else {
@@ -175,9 +195,58 @@ function TodoList() {
     location.reload()
   }
 
+  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSortOption(e.target.value);
+  };
+
+  const sortFunction = (a: Todo, b: Todo) => {
+    if (sortOption === "Update") {
+      return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+    } else if (sortOption === "Limit") {
+      if (a.deadline === null && b.deadline === null) {
+        return 0;
+      }
+      if (a.deadline === null) {
+        return 1;
+      }
+      if (b.deadline === null) {
+        return -1;
+      }
+      return new Date(a.deadline).getTime() - new Date(b.deadline).getTime();
+    }
+    return 0; // デフォルトはソートなし
+  };
+  
+  const sortedTodos = [...todos].sort(sortFunction);
+
+  const filteredTodos = sortedTodos.filter(todo => {
+    const lowerCaseSearchText = searchText.toLowerCase();
+    return (
+      todo.content.toLowerCase().includes(lowerCaseSearchText) ||
+      (todo.deadline && new Date(todo.deadline).toLocaleString().toLowerCase().includes(lowerCaseSearchText)) ||
+      todo.tags.some(tag => tag.name.toLowerCase().includes(lowerCaseSearchText))
+    );
+  });
+  
   return (
     <div className="overflow-x-auto z-0">
-      <table className="table w-full">
+      <div className='flex py-2 justify-between'>
+        <input 
+          type="text" 
+          placeholder="Search" 
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+          className="input input-bordered w-full max-w-xs" />
+        <select
+          className="select select-ghost select-xm w-36 max-w-xs"
+          value={sortOption}
+          onChange={handleSortChange}
+        >
+          <option value="Update">Created</option>
+          <option value="Limit">Deadline</option>
+        </select>
+      </div>
+      <table className="w-full table border-blue-600">
         <thead>
           <tr>
             <th>
@@ -185,13 +254,13 @@ function TodoList() {
                 <input
                   id="checkAll"
                   type="checkbox"
-                  className="checkbox"
+                  className="checkbox checkbox-error border-2"
                   checked={isAllSelected}
                   onChange={() => setSelectedTodoIds(isAllSelected ? [] : todos.map(todo => todo.id))}
                 />
               </label>
             </th>
-            <th className="p-6">Content</th>
+            <th className="p-6 w-96">Content</th>
             <th>
               {selectedTodoIds.length > 0 && (
               <label className='btn btn-ghost btn-xs text-red-500' onClick={handleDeleteSelected}>Delete</label>
@@ -200,20 +269,20 @@ function TodoList() {
           </tr>
         </thead>
         <tbody>
-          {todos.map((todo, index) => (
+          {filteredTodos.map((todo, index) => (
             <tr key={index}>
               <td>
                 <label>
                   <input
                     type="checkbox"
-                    className="checkbox"
+                    className="checkbox checkbox-error border-2"
                     checked={selectedTodoIds.includes(todo.id)}
                     onChange={() => toggleTodoSelect(todo.id)}
                   />
                 </label>
               </td>
               <td>
-                <div className="p-2 font-bold">{todo.content}</div>
+                <div className="p-2 w-96 font-bold break-all">{todo.content}</div>
                 <div className="px-2">
                   {todo.deadline ? new Date(todo.deadline).toLocaleString() : ''}
                 </div>
@@ -257,7 +326,7 @@ function TodoList() {
                     placeholder={todos[selectedTodoIndex].content}
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
-                    className="input input-bordered w-full max-w-xs"
+                    className="input input-bordered w-full"
                   />
                 </div>
               ) : (
@@ -275,7 +344,7 @@ function TodoList() {
                     placeholder={todos[selectedTodoIndex].deadline ? new Date(todos[selectedTodoIndex].deadline).toLocaleString() : '20XX-XX-XX XX:XX:XX'}
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
-                    className="input input-bordered w-full "
+                    className="input input-bordered w-full"
                   />
                 </div>
               ) : (

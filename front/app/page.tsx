@@ -1,17 +1,17 @@
 'use client'
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Header from './Compornents/Header';
 import TodoList from './Compornents/TableCompornents//TodoGETAll';
 
 function Home() {
 
 
-//   const handleSearch = () => {
-//     const filteredTodos = todos.filter((todo) =>
-//       todo.content.toLowerCase().includes(searchText.toLowerCase())
-//     );
-//     setTodos(filteredTodos);
-//   };
+  // const handleSearch = () => {
+  //   const filteredTodos = todos.filter((todo) =>
+  //     todo.content.toLowerCase().includes(searchText.toLowerCase())
+  //   );
+  //   setTodos(filteredTodos);
+  // };
   
 
 //   const handleTodoGETAll = () => {

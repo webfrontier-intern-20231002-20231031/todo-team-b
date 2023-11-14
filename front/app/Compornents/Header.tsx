@@ -1,5 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react';
+import { useRouter } from "next/navigation";
 
 interface TodoPOST {
   content: string;
@@ -27,9 +28,15 @@ export default function Header() {
   const [isTagModalOpen, setIsTagModalOpen] = useState<boolean>(false);
   const [newTagName, setNewTagName] = useState<string>("");
 
+  const router = useRouter();
+
   const fetchTagData  = async () => {
     try {
       const response = await fetch('/api/TagGETAll');
+      if (response.status === 401) {
+        router.push("../Login/");
+        return
+      }
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
@@ -98,8 +105,11 @@ export default function Header() {
       },
       body: JSON.stringify(requestBody),
     });
-
-    if (res.ok) {
+    
+    if (res.status === 401) {
+      router.push("../Login/");
+      return
+    }else if (res.ok) {
       // Todoが正常に作成された場合
       // const createdTodo = await res.json(); // 新しく作成されたTodoの情報を取得
 
@@ -118,10 +128,10 @@ export default function Header() {
       // });
 
       // if (tagRes.ok) {
-      alert('Todo created successfully!');
-      location.reload();
+      await alert('Todo created successfully!');
+      await location.reload();
     } else {
-      alert('Failed to create Todo.');
+      await alert('Failed to create Todo.');
     }
 
     closeModal();
@@ -141,6 +151,10 @@ const handleDELETETags = async (): Promise<void> => {
           method: 'DELETE',
         });
 
+        if (res.status === 401) {
+          router.push("../Login/");
+          return
+        }
         if (res.ok) {
           
         } else {
@@ -176,6 +190,10 @@ const handleCreateTag = async (): Promise<void> => {
       body: JSON.stringify({ name: newTagName }),
     });
 
+    if (res.status === 401) {
+      router.push("../Login/");
+      return
+    }
     if (res.ok) {
       fetchTagData();
       setNewTagName("");
@@ -204,9 +222,15 @@ const handleCreateTag = async (): Promise<void> => {
               <a href="./" className="btn btn-ghost normal-case text-xl">TodoList</a>
             </div>
             <div className="navbar-end">
-              <button className="btn btn-square btn-ghost">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-5 h-5 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path></svg>
-              </button>
+              {/* logoutボタン */}
+              <div className="dropdown dropdown-end">
+                <label tabIndex={0} className="btn btn-square btn-ghost">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-5 h-5 stroke-current"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path></svg>
+                </label>
+                <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+                  <li><a>Logout</a></li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -241,7 +265,7 @@ const handleCreateTag = async (): Promise<void> => {
                   placeholder="ex) 散歩する"
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
-                  className="input input-bordered w-full max-w-xs"
+                  className="input input-bordered w-full"
                 />
               </div>
               <div>
@@ -251,7 +275,7 @@ const handleCreateTag = async (): Promise<void> => {
                   placeholder="ex) 2000-10-1 00:00:00"
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
-                  className="input input-bordered w-full max-w-xs"
+                  className="input input-bordered w-full"
                 />
               </div>
               {/* {tagsContent} */}
@@ -276,7 +300,6 @@ const handleCreateTag = async (): Promise<void> => {
           open={isTagModalOpen}
         >
           <div className="modal-box">
-            {/* ... 他のコード */}
             <button
               className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
               onClick={closeTagModal}
