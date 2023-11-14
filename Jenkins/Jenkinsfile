@@ -33,14 +33,14 @@ pipeline {
             // }
         }
         stage('Test') {
-            agent {
-                dockerfile {
-                    filename 'Jenkins/Dockerfile'
-                    args '--network=default'
-                }
-            }
             parallel{
                 stage("TagsAllTest") {
+                    agent {
+                        dockerfile {
+                            filename 'Jenkins/Dockerfile'
+                            args '--network=default'
+                        }
+                    }
                     steps {
                         sh 'echo "Testing the project"'
                         unstash 'PythonTest'
@@ -49,6 +49,12 @@ pipeline {
                     }
                 }
                 stage("TodoNormalTest") {
+                    agent {
+                        dockerfile {
+                            filename 'Jenkins/Dockerfile'
+                            args '--network=default'
+                        }
+                    }
                     steps {
                         sh 'echo "Testing the project"'
                         unstash 'PythonTest'
@@ -57,6 +63,12 @@ pipeline {
                     }
                 }
                 stage("TodoErrorAndUserAllTest") {
+                    agent {
+                        dockerfile {
+                            filename 'Jenkins/Dockerfile'
+                            args '--network=default'
+                        }
+                    }
                     steps {
                         sh 'echo "Testing the project"'
                         unstash 'PythonTest'
