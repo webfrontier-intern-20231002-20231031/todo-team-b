@@ -1,5 +1,8 @@
 # 実施日時　2023/11/08-2023/11/13
 
+## 作業実施者
+mrAkito
+
 ## 概要
 Jenkinsを利用して、pipelineを作成する際の作業ログであり、出来なかった部分や注意点についても記載する
 
@@ -12,6 +15,9 @@ mac
 - OS Sonoma 14.1
 - M1チップ
 - 16GBメモリ
+
+docker
+- version 24.0.5
 
 #### リモート環境
 Linux x64
@@ -210,6 +216,7 @@ Configrationの設定を行う
 -  `パスワード`にGitHubのパスワードを入力する
 
 他の部分は空欄でOK
+
 2023/11/09現在、中止ボタンを押しても入力画面が閉じないため、リロードが必要（入力内容は保持されるはず）
 
 `Script Path`に`Jenkins/Jenkinsfile`を入力する
@@ -458,8 +465,6 @@ pipeline {
 1. stash関数を利用し、buildステージで生成したcacheを元にtestステージでテストを行う
 2. Jenkinsの並列実行を行うことで、テスト時間の短縮を図る
 3. pytestのオプションを利用して、テストを分割する
-
-
 
 1〜3を踏まえて、Jenkinsfileを変更する
 ```Jenkinsfile
