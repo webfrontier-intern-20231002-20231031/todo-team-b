@@ -1,10 +1,5 @@
 pipeline {
-    agent {
-        dockerfile {
-            filename 'Jenkins/Dockerfile'
-            args '--network=default'
-        }
-    }
+    agent none
     environment {
         PROJECT_NAME="FastAPI+SQLArchemy Todo Sample"
         API_V1_STR="/v1"
@@ -34,14 +29,14 @@ pipeline {
         }
         stage('Test') {
             parallel{
-                // stage("TagsAllTest") {
-                //     steps {
-                //         sh 'echo "Testing the project"'
-                //         unstash 'PythonTest'
-                //         //sh 'cd practical-fastapi; pytest'
-                //         sh 'cd practical-fastapi; pytest -v -m run_these_tag'
-                //     }
-                // }
+                stage("TagsAllTest") {
+                    steps {
+                        sh 'echo "Testing the project"'
+                        unstash 'PythonTest'
+                        //sh 'cd practical-fastapi; pytest'
+                        sh 'cd practical-fastapi; pytest -v -m run_these_tag'
+                    }
+                }
                 stage("TodoNormalTest") {
                     agent {
                         dockerfile {
