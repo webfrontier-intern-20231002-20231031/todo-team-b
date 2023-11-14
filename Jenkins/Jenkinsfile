@@ -36,9 +36,12 @@ pipeline {
             parallel{
                 stage("TagsAllTest") {
                     agent {
-                        dockerfile {
-                            filename 'Jenkins/Dockerfile'
-                            args '--network=default'
+                        // dockerfile {
+                        //     filename 'Jenkins/Dockerfile'
+                        //     args '--network=default'
+                        // }
+                        docker {
+                            image 'tk210479/python-image:3.0'
                         }
                     }
                     steps {
@@ -50,9 +53,12 @@ pipeline {
                 }
                 stage("TodoNormalTest") {
                     agent {
-                        dockerfile {
-                            filename 'Jenkins/Dockerfile'
-                            args '--network=default'
+                        // dockerfile {
+                        //     filename 'Jenkins/Dockerfile'
+                        //     args '--network=default'
+                        // }
+                        docker {
+                            image 'tk210479/python-image:3.0'
                         }
                     }
                     steps {
@@ -64,9 +70,12 @@ pipeline {
                 }
                 stage("TodoErrorAndUserAllTest") {
                     agent {
-                        dockerfile {
-                            filename 'Jenkins/Dockerfile'
-                            args '--network=default'
+                        // dockerfile {
+                        //     filename 'Jenkins/Dockerfile'
+                        //     args '--network=default'
+                        // }
+                        docker {
+                            image 'tk210479/python-image:3.0'
                         }
                     }
                     steps {
