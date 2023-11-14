@@ -39,11 +39,31 @@ pipeline {
                     args '--network=default'
                 }
             }
-            steps {
-                sh 'echo "Testing the project"'
-                unstash 'PythonTest'
-                sh 'cd practical-fastapi; pytest'
-            }
+            parallel{
+                stage("TagsAllTest") {
+                    steps {
+                        sh 'echo "Testing the project"'
+                        unstash 'PythonTest'
+                        //sh 'cd practical-fastapi; pytest'
+                        sh 'cd practical-fastapi; pytest -v -m run_these_tag'
+                    }
+                }
+                stage("TodoNormalTest") {
+                    steps {
+                        sh 'echo "Testing the project"'
+                        unstash 'PythonTest'
+                        //sh 'cd practical-fastapi; pytest'
+                        sh 'cd practical-fastapi; pytest -v -m run_these_todo'
+                    }
+                }
+                stage("TodoErrorAndUserAllTest") {
+                    steps {
+                        sh 'echo "Testing the project"'
+                        unstash 'PythonTest'
+                        //sh 'cd practical-fastapi; pytest'
+                        sh 'cd practical-fastapi; pytest -v -m run_these_todoError_and_user'
+                    }
+                }
             // post {
             //     success {
             //         slackSend (color: '#00FF00', message: "Test Stage Succeeded: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
@@ -55,6 +75,7 @@ pipeline {
             //         slackSend (color: '#FF0000', message: "Test Stage Failed: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
             //     }
             // }
+            }
         }
     }
 }
