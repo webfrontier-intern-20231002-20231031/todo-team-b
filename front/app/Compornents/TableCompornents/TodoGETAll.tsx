@@ -215,7 +215,7 @@ function TodoList() {
       <div className='flex py-2 justify-between'>
         <input 
           type="text" 
-          placeholder="Type here" 
+          placeholder="Search" 
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
           className="input input-bordered w-full max-w-xs" />
