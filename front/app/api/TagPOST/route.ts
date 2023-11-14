@@ -1,15 +1,23 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { auth_jwt } from '../auth';
 
 //export async function POST(req: NextApiRequest, res: NextApiResponse) {
-export async function POST(req: Request, res: NextApiResponse) {
+export async function POST(req: NextRequest, res: NextApiResponse) {
+
+  const res_auth = await auth_jwt(req)
+  if (!res_auth) {
+    return NextResponse.json({ message: 'Unauthorized' }, { status: 401});
+  }
+
   // リクエストヘッダーにCORS関連の設定を追加
   const headers = new Headers();
   //必須
   headers.append("Content-Type", "application/json");
   headers.append('Access-Control-Allow-Origin', '*'); // これはテスト用の設定で、実際のプロダクション環境では '*' を使用しないでください。
-  console.log(req.body)
-  const data = await req.json();
+  const body = await req.text();
+  console.log(body);
+  const data = await JSON.parse(body)
   await fetch('http://127.0.0.1:8000/v1/tag', {
     cache: "no-store",
     method: 'POST',

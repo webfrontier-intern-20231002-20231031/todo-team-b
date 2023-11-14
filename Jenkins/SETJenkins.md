@@ -1,7 +1,7 @@
 # 実施日時　2023/11/08-2023/11/09
 
 ## 実装範囲
-Jenkinsの構築->pipelineの作成->手動でのテスト実施
+Jenkinsの構築->pipelineの作成->手動でのテスト実施->テスト自動化
 ## 検証環境
 mac
 - OS Sonoma 14.1
@@ -10,6 +10,7 @@ mac
 
 ## 作業内容
 Jenkinsの構築
+
 Jenkinsでのpipelineの作成
 
 ### 利用するもの
@@ -76,7 +77,9 @@ docker run --name jenkins-blueocean --detach \
 ```
 
 コンテナ作成後、Jenkinsの管理画面にアクセスする
+
 `http://localhost:8080/`をブラウザで開く
+
 管理者パスワードは、コンテナ作成時に表示されるログに記載されているためパスワードを取得する
 
 ```Terminal
@@ -84,10 +87,13 @@ docker logs jenkins-blueocean
 ```
 
 パスワード認証後、Jenkinsの初期設定を行う
+
 `Install suggested plugins`を選択する
+
 インストール終了後、ユーザ作成などが求められるため、設定を行う
 
 ユーザ作成終了後、dashboardに移動する
+
 追加のプラグインをインストールする
 - Docker Pipeline
 - Blue Ocean
@@ -96,25 +102,34 @@ docker logs jenkins-blueocean
 ### Jenkinsでのpipelineの作成
 
 ダッシュボードから`新規ジョブ作成`を選択する
+
 ジョブ名を決めて、パイプラインを選択する
+
 `OK`を選択する
 
 Configrationの設定を行う
+
 `General`タブから、`パイプライン`の`定義`を`Pipeline script from SCM`に変更する
+
 `SCM`の`Git`を選択する
+
 `リポジトリURL`にブラウザからのアクセスを可能にするために、`/todo-team-b/`までのURLを入力する
+
 `認証情報`に`追加`、`Jenkins`を選択する
+
 -  `ドメイン`に`グローバルドメイン`を入力する
 -  `種類`に`Username with password`を選択する
 -  `ユーザ名`にGitHubのユーザ名を入力する
 -  `パスワード`にGitHubのパスワードを入力する
 
 他の部分は空欄でOK
+
 2023/11/09現在、中止ボタンを押しても入力画面が閉じないため、リロードが必要（入力内容は保持されるはず）
 
 `Script Path`に`Jenkins/Jenkinsfile`を入力する
 
 `Save`を選択する
+
 ビルドの実行を行う
 
 ### 自動テストの実装
@@ -134,12 +149,17 @@ ngrok　httpを実行するとURLが払い出される
 
 #### github webhookを作成する
 git hubのリポジトリ->`Settings`->`Webhooks`->`Add webhook`を選択する
+
 Payload：`払い出されたURL/github-webhook/`を入力する
+
 Content type：`application/www-form-urlencoded`を選択する
+
 Which events would you like to trigger this webhook?：`Just the push event.`を選択する
+
 Active：チェックボタンを入れて、`Add webhook`を選択する
 
 #### Jenkins側の設定を修正する
+
 Jenkinsのダッシュボード画面から`General`->`GitHub hook trigger for GITScm polling`にチェックを入れる
 
 ここまでで対象のブランチへのpushで自動テストができるようになった。

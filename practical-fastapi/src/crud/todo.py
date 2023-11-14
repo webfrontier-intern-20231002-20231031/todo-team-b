@@ -1,14 +1,17 @@
+import json
+
 from sqlalchemy.orm import Session
 
 from models.tag import TagModel
 from models.todo import TodoModel
 from schemas.schema import CreateTodoSchema, UpdateTodoSchema
 
-from .tag import get_by_id as get_tag_by_id, get_by_name
+from .tag import get_by_id as get_tag_by_id
+from .tag import get_by_name
 
 
 def create(db: Session, create_todo_schema: CreateTodoSchema) -> TodoModel:
-    todo_model = TodoModel(**create_todo_schema.model_dump(exclude_unset=True))
+    todo_model = TodoModel(**create_todo_schema.model_dump())
     db.add(todo_model)
     db.commit()
     db.refresh(todo_model)

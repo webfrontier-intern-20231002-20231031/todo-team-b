@@ -19,6 +19,17 @@ pipeline {
                 sh 'cd practical-fastapi/src/test; python -m py_compile conftest.py'
                 // stash(name: 'compiled-results', includes: 'practical-fast-api/src/test/*.py*')
             }
+            post {
+                success {
+                    slackSend (color: '#00FF00', message: "Build Stage Succeeded")
+                }
+                unstable {
+                    slackSend (color: '#FFFF00', message: "Build Stage is Unstable: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
+                }
+                failure {
+                    slackSend (color: '#FF0000', message: "Build Stage Failed: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
+                }
+            }
         }
         stage('Test') {
             agent {
@@ -30,6 +41,17 @@ pipeline {
             steps {
                 sh 'echo "Testing the project"'
                 sh 'cd practical-fastapi; pytest'
+            }
+            post {
+                success {
+                    slackSend (color: '#00FF00', message: "Test Stage Succeeded: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
+                }
+                unstable {
+                    slackSend (color: '#FFFF00', message: "Test Stage is Unstable: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
+                }
+                failure {
+                    slackSend (color: '#FF0000', message: "Test Stage Failed: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
+                }
             }
         }
     }

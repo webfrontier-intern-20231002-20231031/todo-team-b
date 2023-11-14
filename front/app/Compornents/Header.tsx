@@ -1,5 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react';
+import { useRouter } from "next/navigation";
 
 interface TodoPOST {
   content: string;
@@ -27,9 +28,15 @@ export default function Header() {
   const [isTagModalOpen, setIsTagModalOpen] = useState<boolean>(false);
   const [newTagName, setNewTagName] = useState<string>("");
 
+  const router = useRouter();
+
   const fetchTagData  = async () => {
     try {
       const response = await fetch('/api/TagGETAll');
+      if (response.status === 401) {
+        router.push("../Login/");
+        return
+      }
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
@@ -98,8 +105,11 @@ export default function Header() {
       },
       body: JSON.stringify(requestBody),
     });
-
-    if (res.ok) {
+    
+    if (res.status === 401) {
+      router.push("../Login/");
+      return
+    }else if (res.ok) {
       // Todoが正常に作成された場合
       // const createdTodo = await res.json(); // 新しく作成されたTodoの情報を取得
 
@@ -118,10 +128,10 @@ export default function Header() {
       // });
 
       // if (tagRes.ok) {
-      alert('Todo created successfully!');
-      location.reload();
+      await alert('Todo created successfully!');
+      await location.reload();
     } else {
-      alert('Failed to create Todo.');
+      await alert('Failed to create Todo.');
     }
 
     closeModal();
@@ -141,6 +151,10 @@ const handleDELETETags = async (): Promise<void> => {
           method: 'DELETE',
         });
 
+        if (res.status === 401) {
+          router.push("../Login/");
+          return
+        }
         if (res.ok) {
           
         } else {
@@ -176,6 +190,10 @@ const handleCreateTag = async (): Promise<void> => {
       body: JSON.stringify({ name: newTagName }),
     });
 
+    if (res.status === 401) {
+      router.push("../Login/");
+      return
+    }
     if (res.ok) {
       fetchTagData();
       setNewTagName("");
