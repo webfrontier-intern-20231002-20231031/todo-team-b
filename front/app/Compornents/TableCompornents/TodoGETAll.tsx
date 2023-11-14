@@ -326,7 +326,7 @@ function TodoList() {
                     placeholder={todos[selectedTodoIndex].content}
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
-                    className="input input-bordered w-full max-w-xs"
+                    className="input input-bordered w-full"
                   />
                 </div>
               ) : (
@@ -344,7 +344,7 @@ function TodoList() {
                     placeholder={todos[selectedTodoIndex].deadline ? new Date(todos[selectedTodoIndex].deadline).toLocaleString() : '20XX-XX-XX XX:XX:XX'}
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
-                    className="input input-bordered w-full "
+                    className="input input-bordered w-full"
                   />
                 </div>
               ) : (

@@ -265,7 +265,7 @@ const handleCreateTag = async (): Promise<void> => {
                   placeholder="ex) 散歩する"
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
-                  className="input input-bordered w-full max-w-xs"
+                  className="input input-bordered w-full"
                 />
               </div>
               <div>
@@ -275,7 +275,7 @@ const handleCreateTag = async (): Promise<void> => {
                   placeholder="ex) 2000-10-1 00:00:00"
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
-                  className="input input-bordered w-full max-w-xs"
+                  className="input input-bordered w-full"
                 />
               </div>
               {/* {tagsContent} */}
