@@ -12,6 +12,8 @@ router = APIRouter()
 # ユーザ情報登録に関する処理
 @router.post("/")
 def create(user_schema: UserSchema, db: Session = Depends(database.get_db)):
+    if user_schema.email == "" or user_schema.password == "":
+        raise HTTPException(status_code=400, detail="json format error")
     user_model = (
         db.query(UserModel).filter(UserModel.email == user_schema.email).first()
     )
@@ -23,6 +25,8 @@ def create(user_schema: UserSchema, db: Session = Depends(database.get_db)):
 # ログイン処理
 @router.post("/login")
 def login(user_schema: UserSchema, db: Session = Depends(database.get_db)):
+    if user_schema.email == "" or user_schema.password == "":
+        raise HTTPException(status_code=400, detail="json format error")
     user_account = (
         db.query(UserModel).filter(UserModel.email == user_schema.email).first()
     )

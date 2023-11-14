@@ -8,7 +8,7 @@ export default function InputForm() {
 
     const router = useRouter();
 
-    type Login = {
+    type SignUp = {
         email: string;
         password: string;
     }
@@ -29,12 +29,12 @@ export default function InputForm() {
 
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
         e.preventDefault();  
-        const req: Login = {
+        const req: SignUp = {
             email: emailValue,
             password: passwordValue
         };
         console.log(req)
-        await fetch('/api/Login',{
+        await fetch('/api/SignUp',{
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
@@ -45,17 +45,18 @@ export default function InputForm() {
             if (res.status === 400) {
                 throw new Error("空欄があります");
             }else if (res.status === 401) {
-                throw new Error("email, passwordに間違いがあります");
-            }else if(400 > res.status && res.status >= 300){
+                throw new Error("既に登録されています");
+            }
+            else if(400 > res.status && res.status >= 300){
                 throw new Error("Redirection");
             }
-            else if(500 > res.status && res.status >= 500){
+            else if(500 > res.status && res.status >= 400){
                 throw new Error("Client side error");
             }else if(res.status >= 500){
                 throw new Error("Server side error");
-            }else {
+            } else {
                 setErrorMessage('');
-                router.push("../../");
+                router.push("../../Login/");
             }
         })
         .catch(error => {
@@ -68,7 +69,7 @@ export default function InputForm() {
     return (
         <div className="relative flex flex-col justify-center h-screen overflow-hidden">
         <div className="w-full p-6 m-auto bg-white rounded-md shadow-md ring-2 ring-gray-800/50 lg:max-w-lg">
-            <h1 className="text-3xl font-semibold text-center text-gray-700">Login</h1>
+            <h1 className="text-3xl font-semibold text-center text-gray-700">SignUp</h1>
             <form className="space-y-4" onSubmit={(e) => handleLogin(e)}>
                 <div>
                     <label className="label">
@@ -84,11 +85,11 @@ export default function InputForm() {
                     <input type="password" placeholder="Enter Password"
                         className="w-full input input-bordered" onChange={handlePasswordChange}/>
                 </div>
-                <a href="./SignUp" className="text-xs text-gray-600 hover:underline hover:text-blue-600">Want SignUp?</a>
+                <a href="./Login" className="text-xs text-gray-600 hover:underline hover:text-blue-600">Want Login?</a>
                 {errorMessage && <p style={{ color: '#FF69B4' }}>{errorMessage}</p>}
                 <div>
                     {/* <button className="btn btn-block" onClick={handleLogin}>Login</button> */}
-                    <button className="btn btn-block">Login</button>
+                    <button className="btn btn-block">SignUp</button>
                 </div>
             </form>
         </div>
