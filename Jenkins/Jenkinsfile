@@ -35,6 +35,12 @@ pipeline {
         stage('Test') {
             parallel{
                 stage("TagsAllTest") {
+                    agent {
+                        dockerfile {
+                            filename 'Jenkins/Dockerfile'
+                            args '--network=default'
+                        }
+                    }
                     steps {
                         sh 'echo "Testing the project"'
                         unstash 'PythonTest'
