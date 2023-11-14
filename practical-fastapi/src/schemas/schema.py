@@ -14,8 +14,8 @@ class TagSchemaBase(BaseModel):
 
 
 class UserSchema(BaseModel):
-    email: str | None = None
-    password: str | None = None
+    email: str
+    password: str
 
 
 class TodoTagSchema(TagSchemaBase):
