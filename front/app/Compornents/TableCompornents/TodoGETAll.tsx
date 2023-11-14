@@ -233,7 +233,7 @@ function TodoList() {
       <div className='flex py-2 justify-between'>
         <input 
           type="text" 
-          placeholder="Type here" 
+          placeholder="Search" 
           value={searchText}
           onChange={(e) => setSearchText(e.target.value)}
           className="input input-bordered w-full max-w-xs" />
@@ -246,7 +246,7 @@ function TodoList() {
           <option value="Limit">Deadline</option>
         </select>
       </div>
-      <table className="w-full table">
+      <table className="w-full table border-blue-600">
         <thead>
           <tr>
             <th>
@@ -254,7 +254,7 @@ function TodoList() {
                 <input
                   id="checkAll"
                   type="checkbox"
-                  className="checkbox"
+                  className="checkbox checkbox-error border-2"
                   checked={isAllSelected}
                   onChange={() => setSelectedTodoIds(isAllSelected ? [] : todos.map(todo => todo.id))}
                 />
@@ -275,7 +275,7 @@ function TodoList() {
                 <label>
                   <input
                     type="checkbox"
-                    className="checkbox"
+                    className="checkbox checkbox-error border-2"
                     checked={selectedTodoIds.includes(todo.id)}
                     onChange={() => toggleTodoSelect(todo.id)}
                   />
@@ -326,7 +326,7 @@ function TodoList() {
                     placeholder={todos[selectedTodoIndex].content}
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
-                    className="input input-bordered w-full max-w-xs"
+                    className="input input-bordered w-full"
                   />
                 </div>
               ) : (
@@ -344,7 +344,7 @@ function TodoList() {
                     placeholder={todos[selectedTodoIndex].deadline ? new Date(todos[selectedTodoIndex].deadline).toLocaleString() : '20XX-XX-XX XX:XX:XX'}
                     value={date}
                     onChange={(e) => setDate(e.target.value)}
-                    className="input input-bordered w-full "
+                    className="input input-bordered w-full"
                   />
                 </div>
               ) : (
