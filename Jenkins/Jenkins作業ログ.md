@@ -455,10 +455,13 @@ pipeline {
 「Jenkinsfileのagentでdockerfileを指定することで、そのアーキテクチャに合わせたdocker imageを作成することができるようにした」ことによって「テストの処理時間が伸びる」という問題点が発生したためその対応を行う
 
 ### 対応方法
-stash関数を利用し、buildステージで生成したcacheを元にtestステージでテストを行う
-Jenkinsの並列実行を行うことで、テスト時間の短縮を図る
+1. stash関数を利用し、buildステージで生成したcacheを元にtestステージでテストを行う
+2. Jenkinsの並列実行を行うことで、テスト時間の短縮を図る
+3. pytestのオプションを利用して、テストを分割する
 
-Jenkinsfileを変更する
+
+
+1〜3を踏まえて、Jenkinsfileを変更する
 ```Jenkinsfile
 pipeline {
     agent none
@@ -555,3 +558,30 @@ pipeline {
 }
 ```
 
+3を踏まえて、pytest.iniを作成する
+
+pytestのオプションでデコレータで分割したテストを実行するために作成
+
+ディレクトリ構造（markdownなどは省いている）
+
+基本的にはpytestを実行するディレクトリにpytest.iniを配置する
+```bash
+practical-fastapi % tree -L 1
+.
+├── logging.json
+├── pytest.ini
+├── src
+└── tool
+```
+
+```pythhon:pytest.ini
+[pytest]
+markers =
+    run_these_tag: Mark a test to run with the 'run_these_tag' marker
+    run_these_todo: Mark a test to run with the 'run_these_todo' marker
+    run_these_todoError_and_user: Mark a test to run with the 'run_these_todoError_and_user' marker
+```
+
+上記のpytest.iniを作成することで、pytestのオプションを利用してテストを分割する
+
+テスト分割は/practical-fastapi/src/testを参照
