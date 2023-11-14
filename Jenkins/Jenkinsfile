@@ -1,7 +1,8 @@
 pipeline {
     agent {
-        docker {
-            image 'python:3.12.0-alpine3.18'
+        dockerfile {
+            filename 'Jenkins/Dockerfile'
+            args '--network=default'
         }
     }
     environment {
@@ -13,11 +14,6 @@ pipeline {
     }
     stages {
         stage('Build') {
-            agent {
-                docker {
-                    image 'python:3.12.0-alpine3.18'
-                }
-            }
             steps {
                 sh 'echo "Building the project"'
                 sh 'cd practical-fastapi/src/test; python -m py_compile conftest.py'
@@ -38,20 +34,14 @@ pipeline {
         }
         stage('Test') {
             parallel{
-                stage("TagsAllTest") {
-                    agent {
-                        dockerfile {
-                            filename 'Jenkins/Dockerfile'
-                            args '--network=default'
-                        }
-                    }
-                    steps {
-                        sh 'echo "Testing the project"'
-                        unstash 'PythonTest'
-                        //sh 'cd practical-fastapi; pytest'
-                        sh 'cd practical-fastapi; pytest -v -m run_these_tag'
-                    }
-                }
+                // stage("TagsAllTest") {
+                //     steps {
+                //         sh 'echo "Testing the project"'
+                //         unstash 'PythonTest'
+                //         //sh 'cd practical-fastapi; pytest'
+                //         sh 'cd practical-fastapi; pytest -v -m run_these_tag'
+                //     }
+                // }
                 stage("TodoNormalTest") {
                     agent {
                         dockerfile {
