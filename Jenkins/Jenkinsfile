@@ -76,6 +76,7 @@ pipeline {
                         sh 'cd practical-fastapi; pytest -v -m run_these_todoError_and_user'
                     }
                 }
+            }
             post {
                 success {
                     slackSend (color: '#00FF00', message: "Test Stage Succeeded: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
@@ -86,7 +87,6 @@ pipeline {
                 failure {
                     slackSend (color: '#FF0000', message: "Test Stage Failed: ${env.JOB_NAME} - ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)")
                 }
-            }
             }
         }
     }
